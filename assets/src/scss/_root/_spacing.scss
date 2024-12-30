@@ -1,0 +1,78 @@
+@for $i from 1 through 5 {
+  .gap-#{$i} {
+    gap: $i + rem;
+  }
+  .m-#{$i} {
+    margin: $i + rem;
+  }
+  .mt-#{$i} {
+    margin-top: $i + rem;
+  }
+  .mb-#{$i} {
+    margin-bottom: $i + rem;
+  }
+  .ml-#{$i} {
+    margin-left: $i + rem;
+  }
+  .mr-#{$i} {
+    margin-right: $i + rem;
+  }
+  .my-#{$i} {
+    margin-top: $i + rem;
+    margin-bottom: $i + rem;
+  }
+  .mx-#{$i} {
+    margin-left: $i + rem;
+    margin-right: $i + rem;
+  }
+  .p-#{$i} {
+    padding: $i + rem;
+  }
+  .pt-#{$i} {
+    padding-top: $i + rem;
+  }
+  .pb-#{$i} {
+    padding-bottom: $i + rem;
+  }
+  .pl-#{$i} {
+    padding-left: $i + rem;
+  }
+  .pr-#{$i} {
+    padding-right: $i + rem;
+  }
+  .py-#{$i} {
+    padding-top: $i + rem;
+    padding-bottom: $i + rem;
+  }
+  .px-#{$i} {
+    padding-left: $i + rem;
+    padding-right: $i + rem;
+  }
+
+  @include media-breakpoint-down(md) {
+    [class*="mt-"].sm\:mt-#{$i} {
+      margin-top: $i + rem;
+    }
+    .sm\:mb-#{$i} {
+      margin-bottom: $i + rem;
+    }
+    .md\:pt-#{$i} {
+      padding-top: $i + rem;
+    }
+    .md\:pb-#{$i} {
+      padding-bottom: $i + rem;
+    }
+  }
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mb-05 {
+  margin-bottom: 0.5rem;
+}
+.m-0 {
+  margin: 0;
+}

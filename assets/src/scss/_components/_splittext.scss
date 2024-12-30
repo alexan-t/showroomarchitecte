@@ -1,0 +1,13 @@
+[data-splittext]{
+    .word, .letter {
+        display: inline-block;
+    }
+    .letter {
+        position: relative;
+      }
+      .word {
+        margin-inline-end: .75rem;
+      }
+      flex-wrap: wrap;
+}
+

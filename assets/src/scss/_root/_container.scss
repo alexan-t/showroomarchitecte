@@ -1,0 +1,31 @@
+@each $prefix, $width in $containers {
+	.container-#{$prefix} {
+		max-width:$width;
+		padding-right: calc(var(--space-x) * .5);
+		padding-left: calc(var(--space-x) * .5);
+		margin-right: auto;
+		margin-left: auto;
+	}
+	
+ }
+ .container{
+	max-width:map-get($containers, "lg");
+	padding-right: calc(var(--space-x) * .5);
+	padding-left: calc(var(--space-x) * .5);
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.container-fluid{
+	padding-right: calc(var(--space-x) * .5);
+	padding-left: calc(var(--space-x) * .5);
+	width: 100%;
+}
+
+.w-full{
+	width: 100%;
+}
+
+.h-full{
+	height: 100%;
+}

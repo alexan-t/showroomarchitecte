@@ -1,0 +1,37 @@
+@import "reboot";
+@import "variables";
+@import "../variables";
+@import "mixins/index";
+@import "base";
+@import "colors";
+@import "media";
+@import "spacing";
+@import "container";
+@import "flexbox";
+@import "text";
+@import "buttons";
+@import "nav";
+@import "forms";
+
+
+:root {
+    @each $prefix, $color in $colors {
+        --color-#{$prefix}: #{$color};
+    }
+    @each $prefix, $map in $sizes {
+	  --font-size-#{$prefix}: #{map-get($map, size)};
+    }
+    @each $prefix, $width in $containers {
+	 --container-#{$prefix}:#{$width}
+    }
+    --spacing-1:#{$spacing};
+    --spacing-2:#{$spacing*1.75};
+    --spacing-3:#{$spacing*3.5};
+    --spacing-4:#{$spacing*4};
+    --space-x: #{$spacing*1.5};
+	--space-y: #{$spacing*1.5};
+    --aspect-ratio:#{$aspect-ratio};
+    --radius:#{$radius};
+    --btn-radius:#{$btn-radius};
+    --gap:#{$spacing};
+};

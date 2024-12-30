@@ -1,0 +1,97 @@
+$colors: (
+  primary: #007dff,
+  secondary: #ec98ba,
+  tertiary: #54de89,
+  "dark": #000409,
+  "white": white,
+  "grey": rgb(186, 186, 186),
+  grey-100: rgb(216, 216, 216),
+);
+
+$sizes: (
+  xxs: (
+    size: 0.5rem,
+    // 8px
+    lineheight: 1rem,
+  ),
+  xs: (
+    size: 0.75rem,
+    // 12px
+    lineheight: 1rem,
+  ),
+  sm: (
+    size: 0.875rem,
+    // 14px
+    lineheight: 1.25rem,
+  ),
+  base: (
+    size: 1rem,
+    // 16px
+    lineheight: 1.5rem,
+  ),
+  lg: (
+    size: 1.125rem,
+    // 18px
+    lineheight: 1.75rem,
+  ),
+  xl: (
+    size: 1.25rem,
+    // 20px
+    lineheight: 1.75rem,
+  ),
+  2xl: (
+    size: 1.5rem,
+    // 24px
+    lineheight: 2rem,
+  ),
+  3xl: (
+    size: 1.875rem,
+    // 30px
+    lineheight: 2.25rem,
+  ),
+  4xl: (
+    size: 2.25rem,
+    // 36px
+    lineheight: 2.75rem,
+  ),
+  5xl: (
+    size: 3rem,
+    // 48px
+    lineheight: 1.1,
+  ),
+  6xl: (
+    size: 3.75rem,
+    // 60px
+    lineheight: 1.1,
+  ),
+);
+
+$breakpoints: (
+  xs: 576px,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
+);
+
+$aspect-ratios: (
+  "1x1": "1 / 1",
+  "4x3": "4 / 3",
+  "16x9": "16 / 9",
+  "21x9": "21 / 9",
+  "2x3": "2 / 3",
+);
+
+$containers: (
+  xs: 576px,
+  sm: 768px,
+  md: 1024px,
+  lg: 1280px,
+  xl: 1536px,
+  2xl: 1536px,
+);
+
+$spacing: 1rem;
+$aspect-ratio: "4/3";
+$border-radius: 50%;
+$btn-radius: 20rem;
+$radius: 20px;

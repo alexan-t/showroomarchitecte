@@ -1,0 +1,118 @@
+$colors: (
+  primary: #e63a54,
+  secondary: #0e993c,
+  "blue": #3968a8,
+  "blue-light": #01a0be,
+  "blue-dark": #383b45,
+  "dark": #000000,
+  "gold": #e5b704,
+  "premium": #b21917,
+  "standard": #fc8f02,
+  "white": #ffffff,
+  "grey": #f1f1f1f1,
+  "gray": #b5b5b5,
+  "gren": #a9c80f,
+  //grey-100: rgb(216, 216, 216)
+);
+
+$sizes: (
+  xxs: (
+    size: 0.5rem,
+    // 8px
+    lineheight: 1rem,
+  ),
+  xs: (
+    size: clamp(0.6875rem, calc(0.59375rem + 0.1953125vw), 0.75rem),
+    // 12px
+    lineheight: 1rem,
+  ),
+  sm: (
+    size: clamp(0.8125rem, calc(0.625rem + 0.390625vw), 0.9375rem),
+    // 14px
+    line-height: 1.4,
+  ),
+  base: (
+    //size: clamp(1rem, calc(0.8125rem + 0.390625vw), 1.125rem),
+    size: 1.063rem,
+    line-height: 1.4,
+  ),
+  md: (
+    size: clamp(1.1875rem, calc(0.90625rem + 0.5859375vw), 1.375rem),
+    // 18px
+    lineheight: 1.75rem,
+  ),
+  lg: (
+    size: clamp(1.4375rem, calc(1.15625rem + 0.5859375vw), 1.625rem),
+    // 18px
+    lineheight: 1.2,
+  ),
+  xl: (
+    size: clamp(1.75rem, calc(1.375rem + 0.78125vw), 2rem),
+    // 20px h5
+    lineheight: 1.2,
+  ),
+  2xl: (
+    size: clamp(2.0625rem, calc(1.40625rem + 1.3671875vw), 2.5rem),
+    // 24px h4
+    lineheight: 1.2,
+  ),
+  3xl: (
+    size: clamp(2.5rem, calc(1.75rem + 1.5625vw), 3rem),
+    // 30px h3
+    lineheight: 1.2,
+  ),
+  4xl: (
+    size: clamp(3rem, calc(2.0625rem + 1.953125vw), 3.625rem),
+    // 36px h2
+    lineheight: 1.2,
+  ),
+  5xl: (
+    size: clamp(2.44rem, 1.83rem + 3.04vw, 4rem),
+    // 48px  h1
+    lineheight: 1.2,
+  ),
+  6xl: (
+    size: clamp(3.05rem, 2.04rem + 5.07vw, 5.65rem),
+    // 60px
+    lineheight: 1.2,
+  ),
+);
+
+// $breakpoints: (
+//   xs: 576px,
+//   sm: 768px,
+//   md: 992px,
+//   lg: 1200px
+// );
+
+// $aspect-ratios: (
+//   "1x1": "1 / 1",
+//   "4x3": "4 / 3" ,
+//   "16x9": "16 / 9",
+//   "21x9": "21 / 9"
+// );
+
+// $containers: (
+//     sm:768px,
+//     md:1024px,
+//     lg:1280px,
+//     xl:1536px,
+//     2xl:1536px
+// );
+
+// $spacing : 1rem;
+$spacing: 1rem;
+$aspect-ratio: "4/3";
+$border-radius: 50%;
+$btn-radius: 1.5rem;
+$radius: 20px;
+
+$font: "Roboto", serif;
+$fontheading: "Montserrat", serif;
+$fontLato: "Lato", serif;
+
+:root {
+  --font: #{$font};
+  --fontheading: #{$fontheading};
+  --fontLato: #{fontLato};
+}

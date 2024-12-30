@@ -1,0 +1,104 @@
+// pseudo content
+@mixin pseudo-content($width:null, $height:null, $bg:null) { // null = arguments optionnels
+  content: "";
+  background-color: $bg;
+  width: $width;
+  height: $height;
+  position: absolute;
+  top:0;
+  left:0;
+  z-index: -1;
+}
+
+
+@mixin flex($center:null ) {
+  display: flex;
+  flex-wrap: wrap;
+ 
+  @if $center == centerall{
+      align-items: center;
+      justify-content: center;
+  }@else if $center{
+    align-items: $center;
+  }
+}
+
+
+
+// lien underline + focus box-shadow
+@mixin link-style($color) {
+  text-decoration: underline;
+
+  &:focus {
+      outline: 0;
+      box-shadow: 0 0 0 2px $color;
+  }
+}
+
+@mixin isnav($py:.75em, $px:.5rem, $center:false) {
+  @include flex;
+  @if $center{
+    justify-items: $center;
+  }
+  a{
+   &:not(.btn){
+      padding: $py $px $py 0;
+      @if $center{
+        padding-left: $px;
+      }
+   } 
+    display: inline-block;
+  }
+  margin-bottom:.2rem;
+  list-style: none;
+  padding-left: 0;
+}
+
+
+@mixin has-color-inverted() {
+  color:var(--color-inverted);
+  a:not(.btn) {
+    color:var(--color-inverted);
+    &:hover{
+      color:var(--color-primary)
+    }
+  }
+ 
+  h1, h2, h3, p{
+      color:var(--color-inverted);
+  }
+
+  svg{
+    fill: var(--color-inverted)!important;
+  }
+}
+
+@mixin center($xy:xy) {
+  @if $xy == xy {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+  }
+  @else if $xy == x {
+      left: 50%;
+      transform: translateX(-50%);
+  }
+  @else if $xy == y {
+      top: 50%;
+      transform: translateY(-50%);
+  }
+}
+
+
+@mixin linkunderline(){
+  transition: background-size 0.3s cubic-bezier(0.785, 0.135, 0.15, 0.86), transform 0.3s cubic-bezier(0.785, 0.135, 0.15, 0.86);;
+		display: inline-block;
+		background-size: 0% 2px;
+		&:hover{
+			transform:translateX(10px);
+			background-image: linear-gradient(90deg, currentColor 0%, currentColor 100%);
+			background-size: 100% 2px;
+			background-position: left bottom;
+			background-repeat: no-repeat;
+		}
+}

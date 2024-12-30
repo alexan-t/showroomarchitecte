@@ -1,0 +1,58 @@
+.page-cms{
+    .row.row-lg{
+        @include media-breakpoint-up(sm) {
+            --space-x:6rem;
+        }
+    }
+ }
+
+// .container-blocs{
+//     > *{
+//         padding-right: calc(var(--gutter-x) * .5);
+//         padding-left: calc(var(--gutter-x) * .5);
+//     }
+//     > *, .wp-block-group__inner-container {
+//         max-width: var(--container);
+//         margin-left: auto !important;
+//         margin-right: auto !important;
+//         width: 100%;
+//         margin-left: auto!important;
+//         margin-right: auto!important;
+//         max-width: var(--container);
+//         &:not(.row){
+//             padding-right: calc(var(--gutter-x) * .5);
+//             padding-left: calc(var(--gutter-x) * .5);
+//         }
+
+//         &.alignwide, .alignwide{
+// 			max-width: var(--container-lg);
+// 			.wp-block-group__inner-container {
+// 				max-width: var(--container-lg);
+// 			}
+// 		}
+
+// 		&.alignshort, .alignshort, &.container-sm{
+// 			max-width: var(--container-sm);
+// 		}
+
+//         &.alignmedium, .alignmedium, &.container-md{
+// 			max-width: var(--container-md);
+// 		}
+
+// 		&.alignfull {
+// 			max-width: 1000%;
+// 			overflow: hidden;
+//             padding-left: 0;
+//             padding-right: 0;
+// 		}
+        
+//     }
+
+
+// 	> .row > *{
+// 		padding-left: 0;
+// 		padding-right: 0;
+// 	}
+
+
+// }

@@ -1,0 +1,65 @@
+.splide__arrow {
+  background-color: #333;
+  color: #fff;
+  border-radius: 50%;
+  padding: 10px;
+}
+.splide__pagination {
+  bottom: -2.5em;
+  margin-top: 10px;
+  display: flex;
+  justify-content: end;
+}
+.splide {
+  margin: 0 auto;
+}
+.splide__slide {
+  position: relative;
+  overflow: hidden;
+}
+.splide__pagination__page {
+  background: #d50000;
+}
+.splide__pagination li {
+  display: inline-block;
+  line-height: 1;
+  list-style-type: none;
+  margin: 0;
+  pointer-events: auto;
+}
+.splide__pagination__page {
+  height: 20px;
+  width: 20px;
+  border: 1px solid #707070;
+  background-color: #fff;
+  opacity: 1;
+}
+.splide__pagination__page.is-active {
+  border: 1px solid transparent;
+  background-color: var(--color-blue-dark);
+  transform: scale(1.1);
+}
+
+.slide-type-1 {
+  .cover {
+    aspect-ratio: 4 / 3;
+    @include media-breakpoint-down(md) {
+      aspect-ratio: 1 / 1;
+    }
+  }
+}
+
+.slide-type-2 {
+  .cover {
+    aspect-ratio: 2 / 3;
+    @include media-breakpoint-down(md) {
+      aspect-ratio: 1 / 1;
+    }
+  }
+}
+
+.slide-type-3 {
+  .cover {
+    aspect-ratio: 1 / 1;
+  }
+}

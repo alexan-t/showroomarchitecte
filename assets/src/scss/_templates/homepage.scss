@@ -1,0 +1,188 @@
+//Page d'accueil Homepage
+#homepage {
+  //Section Landing
+  .landing {
+    height: 90vh;
+    width: 100vw;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+    z-index: 1;
+    @include media-breakpoint-down(md) {
+      height: 100vh;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 90vh;
+      background-color: black;
+      z-index: -1;
+      opacity: 0.4;
+      @include media-breakpoint-down(md) {
+        height: 100vh;
+      }
+    }
+    .custom-select {
+      select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-color: var(--color-white);
+        border: 2px solid var(--color-white);
+        border-radius: 8px;
+        padding: 10px 40px 10px 15px;
+        font-size: 14px;
+        color: var(--color-blue);
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        &:focus {
+          border-color: var(--color-blue);
+          box-shadow: 0 0 5px rgba(112, 112, 204, 0.5);
+        }
+      }
+      position: relative;
+      width: 200px;
+      &::after {
+        content: "▼";
+        font-size: 12px;
+        color: var(--color-blue);
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        pointer-events: none;
+      }
+    }
+    .form {
+      button {
+        background-color: var(--color-blue);
+        color: white;
+        padding: 0.5rem 1rem;
+        border: 1px solid transparent;
+        border-radius: 15px;
+      }
+    }
+  }
+  //Section Reassurance
+  .reassurance {
+    .text-lg {
+      @include media-breakpoint-down(md) {
+        font-size: var(--font-size-base);
+      }
+    }
+  }
+  //Section Slide Talents
+  .talent {
+    text-align: center;
+    max-height: 500px;
+    #talentCarousel {
+      padding: 0 1rem;
+      img {
+        max-width: 100%;
+      }
+      .talent-infos {
+        max-width: 100%;
+        position: relative;
+        overflow: hidden;
+
+        &:hover {
+          .talent-text {
+            bottom: -130px;
+          }
+          .cover {
+            transform: scale(1.2);
+          }
+        }
+        .cover {
+          transition: 0.3s ease-in-out;
+        }
+        .talent-text {
+          position: absolute;
+          bottom: -35px;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: white;
+          width: 100%;
+          transition: 0.3s ease-in-out;
+          &::before {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            background: #333;
+            width: 100%;
+            height: 90px;
+            z-index: -1;
+            opacity: 0.5;
+          }
+        }
+        &-title {
+          margin-top: 10px;
+          font-size: 16px;
+          font-weight: bold;
+          color: #fff;
+        }
+        &-professionel {
+          margin-top: 5px;
+          font-size: 14px;
+          color: #ffba4a;
+        }
+        &-localisation {
+          margin-top: 5px;
+          font-size: 12px;
+          color: #f1f1f1;
+        }
+      }
+    }
+  }
+  //Section Search Recherche Talents
+  .searchtalent {
+    position: relative;
+    &-slogan {
+      @include media-breakpoint-up(lg) {
+        top: 110px;
+        left: 30%;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        text-align: center;
+      }
+    }
+  }
+  //Section Find Talents
+  .findtalent {
+    position: relative;
+    &-title {
+      position: relative;
+      div {
+        width: 300px;
+      }
+      &::before {
+        content: "❝";
+        position: absolute;
+        left: 10px;
+        top: -10px;
+        color: var(--color-standard);
+        font-size: var(--font-size-xl);
+      }
+      &::after {
+        content: "❝";
+        position: absolute;
+        left: 160px;
+        bottom: -10px;
+        color: var(--color-standard);
+        font-size: var(--font-size-xl);
+        transform: rotate(180deg);
+      }
+    }
+    a {
+      border-radius: 50px;
+      padding: 1rem;
+    }
+  }
+}

@@ -1,0 +1,138 @@
+@each $prefix, $map in $sizes {
+  .text-#{$prefix} {
+    font-size: var(--font-size-#{$prefix});
+    line-height: map-get($map, lineheight);
+  }
+}
+small {
+  font-size: var(--font-size-sm);
+}
+//// types
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5 {
+  margin-block-end: var(--spacing-1);
+  font-weight: bold;
+  line-height: normal;
+}
+h1,
+.h1 {
+  font-size: var(--font-size-6xl);
+  //line-height: 1;
+}
+h2,
+.h2 {
+  font-size: var(--font-size-2xl);
+  @include media-breakpoint-down(md) {
+    font-size: var(--font-size-xl);
+  }
+}
+h3,
+.h3 {
+  font-size: var(--font-size-xl);
+  @include media-breakpoint-down(md) {
+    font-size: var(--font-size-lg);
+  }
+}
+h4,
+.h4 {
+  font-size: var(--font-size-lg);
+  @include media-breakpoint-down(md) {
+    font-size: var(--font-size-md);
+  }
+}
+h5,
+.h5 {
+  font-size: var(--font-size-md);
+  @include media-breakpoint-down(md) {
+    font-size: var(--font-size-base);
+  }
+}
+p {
+  margin-block-end: var(--spacing-1);
+}
+
+.italic {
+  font-style: italic;
+}
+.bold,
+strong,
+b {
+  font-weight: 700;
+}
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.capitalize {
+  text-transform: capitalize;
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.list-disc {
+  list-style-type: disc;
+  margin-left: 1rem;
+  margin-block-end: var(--spacing-1);
+  //list-style-position: inside;
+}
+
+.list-decimal {
+  list-style-type: decimal;
+  margin-left: 1rem;
+  margin-block-end: var(--spacing-1);
+  //list-style-position: inside;
+}
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}

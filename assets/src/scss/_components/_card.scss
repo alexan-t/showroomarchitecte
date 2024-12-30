@@ -1,0 +1,174 @@
+.card {
+    overflow: hidden;
+    position: relative;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+    background-size: cover;
+    border-radius: var(--radius);
+    &-body {
+        flex: auto;
+        flex-direction: column;
+        justify-content: inherit;
+    }
+
+    @include media-breakpoint-down(md) {
+        max-width: 100%;
+        width: calc(100vw - calc(var(--gutter-x) * 0.5));
+        .visual{
+            img{
+                width: 100%;
+                object-fit: cover;
+            }
+        }
+    }
+
+    @include media-breakpoint-up(md) {
+        .card-body{
+            .spectacles-home &{
+                flex-direction: row;
+                .visual{
+                    width: 40%;
+                    img{
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+                .cnt{
+                    width: 60%;
+                    height: 100%;
+                    justify-content:center;
+                     .h4{
+                            font-size: var(--font-size-xl);
+                        
+                    }
+                    li{
+                        display: inline-flex;
+                        padding: 0 1.5rem;
+                        position: relative;
+                    }
+                    li+li:before{
+                        @include pseudo-content(8px, 8px, var(--color-current));
+                        z-index: 9;
+                        border-radius: 100%;
+                        top:30%;
+                        left:-.5rem
+                    }
+                } 
+            }
+                   
+        }
+    } 
+
+    .cnt {
+        padding: 2rem 1rem;
+        min-height: 120px;
+        background-color: var(--color-wt);
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        flex: 1 1 auto;
+        a{
+            color: var(--color-dark);
+            &:hover{
+                color: var(--color-current);
+            }
+        }
+        .h5{
+            text-align: center;
+            font-size: var(--font-size-md)
+        }
+        .date{
+            margin-bottom: .5rem;
+        }
+    }
+    .visual{
+        position: relative;
+        .infos {
+            background-color: var(--color-current);
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;  
+            padding: .5rem;    
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity .6s;
+            a{
+                color:var(--color-white);
+                display: flex;
+                align-items: center;
+                gap: .75rem;
+                .icon{
+                    background-color: var(--color-white);
+                    color:var(--color-current);
+                    border-radius: 100%;
+                    padding: .25rem;
+                    width: 2rem;
+                    height: 2rem;
+                }
+            }
+        }
+        
+    }
+    &:hover{
+        .infos {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+    .btn-dark:hover{
+        background-color: var(--color-dark);
+        color: var(--color-white);
+    }
+
+    .wrapper_ban_full {
+        color: var(--color-white);
+        position: absolute;
+        right: 0;
+        background: url("/assets/img/bg_full.svg") no-repeat top right;
+        background-size: cover;
+        width: 130px;
+        height: 130px;
+        z-index: 99;
+        .h5 {
+            transform: rotate(45deg) translate(55%, 10%);
+        }
+    }
+}
+
+.card-bg {
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem;
+    background-size: 120%;
+}
+
+.card-artiste {
+    flex-direction: column;
+    height: auto;
+    
+
+    .h3 {
+        display: flex;
+        align-items: center;
+        color: var(--color-dark);
+        font-size:  var(--font-size-xl);
+        margin-top: .75rem;
+        justify-content: center;
+    }
+
+    .infos {
+         color:var(--color-white);
+         flex-direction: column;
+    }
+    
+}
+

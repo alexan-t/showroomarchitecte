@@ -1,18 +1,10 @@
-import General from './_general';
+import "../scss/main.scss";
+import { initComponents } from "./modules.js";
 
-const App = {
-	/**
-	 * App.init
-	 */
-	init() {
-		// General scripts
-		function initGeneral() {
-			return new General();
-		}
-		initGeneral();
-	},
+window.onload = (event) => {
+  init();
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-	App.init();
-});
+function init() {
+  initComponents();
+}

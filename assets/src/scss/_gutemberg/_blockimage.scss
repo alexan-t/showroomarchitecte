@@ -1,0 +1,80 @@
+
+  .wp-block-image {
+	// uses <figure> element
+	// <img> as a descendent
+	max-width: 100%;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+	
+	&.aligncenter {
+		text-align: center;
+	}
+    &.alignfull{
+        max-width: 1000%;
+        margin-right: calc(50% - 50vw);
+        margin-left: calc(50% - 50vw);
+    }
+	
+	&.alignfull img,
+	&.alignwide img {
+		width: 100%;
+	}
+
+	.alignleft,
+	.alignright,
+	&.is-resized {
+		display: table;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.alignleft > figcaption,
+	.alignright > figcaption,
+	&.is-resized > figcaption {
+		display: table-caption;
+		caption-side: bottom;
+	}
+
+	.alignleft {
+		/*rtl:ignore*/
+		float: left;
+		/*rtl:ignore*/
+		margin-right: 1em;
+	}
+
+	.alignright {
+		/*rtl:ignore*/
+		float: right;
+		/*rtl:ignore*/
+		margin-left: 1em;
+	}
+
+	.aligncenter{
+		margin-left: auto;
+		margin-right: auto;
+		img{
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+
+	figcaption {
+		margin-top: 0.5em;
+		margin-bottom: 1em;
+		color: #555d66;
+		text-align: center;
+		font-size: 13px;
+	}
+
+} // .wp-block-image
+
+.wp-block-image.mx-auto{
+	margin-left: auto;
+	margin-right: auto;
+}

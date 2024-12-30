@@ -1,0 +1,77 @@
+#francemap{
+    width: 800px;
+    height: 800px;
+    margin: auto;
+    @include media-breakpoint-down(md) {
+        width: 400px;
+        height: 400px;
+    }
+}
+
+// Class prefix
+$classPrefix: jvm- !default;
+$border-color: var(--color-base) !default;
+$box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !default;
+
+// Tooltip
+$tooltip-shadow: 1px 2px 12px rgba(0, 0, 0, .2) !default;
+$tooltip-font-family:  var(--font-base) sans-serif, Verdana !default;
+$tooltip-bg-color: var(--color-primary) !default;
+$tooltip-radius: 3px !default;
+$tooltip-font-size: smaller !default;
+$tooltip-padding: 3px 5px !default;
+
+
+// Global resets
+svg { touch-action: none }
+image, text, .#{$classPrefix}zoomin, .#{$classPrefix}zoomout { user-select: none }
+
+// jsVectorMap container
+.#{$classPrefix}container {
+  touch-action: none;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+// Tooltip
+.#{$classPrefix}tooltip {
+  border-radius: $tooltip-radius;
+  background-color: $tooltip-bg-color;
+  font-family: $tooltip-font-family;
+  font-size: $tooltip-font-size;
+  box-shadow: $tooltip-shadow;
+  padding: $tooltip-padding;
+  white-space: nowrap;
+  position: absolute;
+  display: none;
+  z-index: 999;
+  color: #FFF;
+  &.active {
+    display: block;
+  }
+}
+.#{$classPrefix}region{
+    fill:var(--color-secondary);
+    border-color: #fff;
+    stroke: var(--color-white);
+    stroke-width: 1px;
+    &:hover{
+        fill:var(--color-secondary);
+        opacity: .7;
+    }
+}
+
+
+.modal-antenne{
+  text-align: center;
+    li {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    a{
+      width: 100%;
+    }
+    
+}

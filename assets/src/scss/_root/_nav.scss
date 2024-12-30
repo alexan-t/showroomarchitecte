@@ -1,0 +1,25 @@
+nav{
+    --gap:1rem;
+}
+
+.nav-h, .nav-v{
+    display: flex;
+    gap: var(--gap);
+    a{
+        text-decoration: none;
+    }
+}
+
+.nav-v{
+    flex-direction: column;
+}
+.nav-h{
+   align-items: center;
+}
+
+@include media-breakpoint-up(md) {
+    .md\:nav-h{
+        flex-direction: row;
+        align-items: center;
+    }
+  }

@@ -1,0 +1,50 @@
+.sidedrawer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 30;
+  visibility: hidden;
+  transition: background-color 0.3s, visibility 0s 0.3s;
+  z-index: 999;
+}
+.sidedrawer-inner {
+  background-color: var(--color-light);
+  width: 100%;
+  max-width: 800px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  transform: translateX(100%);
+  transition: transform 0.4s ease-in-out, box-shadow 0.3s;
+}
+.sidedrawer-content {
+  height: 100%;
+  overflow: auto;
+  padding: 3em;
+}
+.sidedrawer.is-open {
+  background-color: rgba(0, 0, 0, 0.7);
+  visibility: visible;
+  transition: background-color 0.3s;
+}
+.sidedrawer.is-open .sidedrawer-inner {
+  transform: translateX(0);
+}
+.sidedrawer-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--color-white);
+}
+.sidedrawer-close svg {
+  width: 20px;
+  height: 20px;
+}
+.sidedrawer-close:hover {
+  color: var(--color-primary);
+}/*# sourceMappingURL=sidedrawer.css.map */

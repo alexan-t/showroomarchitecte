@@ -1,0 +1,32 @@
+// .galery-grid{
+
+//     &-container{
+//         column-count: 3;
+//         column-gap: 0;
+//         grid-row-gap: 0;
+//     }
+
+//     &-item{
+//         margin: 0;
+//         display: grid;
+//         grid-template-rows: 1fr auto;
+//         break-inside: avoid;
+//     }
+    
+//     img{
+//         width: 100%;
+//         height: auto;
+//         grid-row: 1 / -1;
+//         grid-column: 1;
+//     }
+//     button{
+//         border: none;
+//         padding: 0;
+//     }
+
+// }
+
+
+    .row.photoslist{
+        --bs-gutter-x: 0rem;
+    }

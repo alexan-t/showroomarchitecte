@@ -1,0 +1,53 @@
+body{
+    -webkit-font-smoothing: antialiased;
+    font-size: var(--font-size-base);
+}
+// Accessibility
+.sr-only, .sr-only-focusable{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.sr-only-focusable:focus {
+    clip: auto;
+    background: #000;
+    color: #fff;
+    display: block;
+    height: auto;
+    overflow: visible;
+    padding: 15px;
+    text-align: center;
+    white-space: normal;
+    width: 100%;
+    width: auto;
+}
+
+// Display
+.block{
+    display: block;
+}	
+.inline-block	{
+    display: inline-block;
+}
+.inline	{
+    display: inline;
+}
+.flex	{
+    display: flex;
+}
+.inline-flex	{
+    display: inline-flex;
+}
+.none{
+    display: none;
+}
+.hide{
+    display: none;
+}

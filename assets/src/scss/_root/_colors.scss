@@ -1,0 +1,8 @@
+@each $color-name, $color-value in $colors {
+	.color-#{$color-name} {
+		color: var(--color-#{$color-name});
+	}
+	.bg-#{$color-name} {
+		background-color: var(--color-#{$color-name});
+	}
+}

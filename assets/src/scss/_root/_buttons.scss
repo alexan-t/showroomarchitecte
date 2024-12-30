@@ -1,0 +1,93 @@
+.btn {
+  text-align: center;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  &:focus {
+    outline: 0;
+  }
+  &:focus,
+  &:focus {
+    -webkit-box-shadow: 0 0 0 2px var(--color-dark);
+    box-shadow: 0 0 0 2px var(--color-dark);
+  }
+  text-decoration: none;
+  &:not([class*="btn-"]) {
+    background-color: var(--color-dark);
+    color: var(--color-white);
+    &:hover {
+      background-color: var(--color-white);
+      color: var(--color-dark);
+    }
+  }
+  svg {
+    font-size: var(--font-size-sm);
+    height: 1em;
+    width: 1em;
+  }
+
+  transition: color 0.3s, background-color 0.3s, border-color 0.3s;
+
+  &.btn-sm {
+    font-size: var(--font-size-sm);
+  }
+  &.btn-lg {
+    font-size: var(--font-size-lg);
+    align-items: initial;
+  }
+}
+
+@each $color-name, $color-value in $colors {
+  @if $color-name != "white" {
+    .btn-#{$color-name} {
+      background-color: var(--color-#{$color-name});
+      color: var(--color-white);
+      border: 2px solid transparent;
+      &:hover {
+        background-color: var(--color-white);
+        color: var(--color-#{$color-name});
+        border: 2px solid var(--color-#{$color-name});
+      }
+    }
+  }
+  .btn-outline-#{$color-name} {
+    border-color: var(--color-#{$color-name});
+    color: var(--color-#{$color-name});
+    background-color: var(--color-white);
+    &:hover {
+      background-color: var(--color-#{$color-name});
+      color: var(--color-white);
+      border-color: var(--color-white);
+    }
+  }
+}
+
+.btn-white {
+  background-color: var(--color-white);
+  color: var(--color-dark);
+  &:hover {
+    background-color: var(--color-dark);
+    color: var(--color-white);
+  }
+}
+
+.btn-outline-white {
+  border-color: var(--color-white);
+  color: var(--color-white);
+  &:hover {
+    //border-color:var(--color-primary);
+    color: var(--color-dark);
+  }
+}
+
+.stretched-link:after {
+  bottom: 0;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+}
