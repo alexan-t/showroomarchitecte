@@ -183,10 +183,13 @@ main {
   border-radius: var(--radius);
 }
 
+.bradius-1 {
+  border-radius: 10px;
+}
+
 form {
   label:not(.form-check-label) {
     font-family: var(--fontheading);
-    font-size: var(--font-size-xl);
   }
   .form-group {
     margin-bottom: 1rem;

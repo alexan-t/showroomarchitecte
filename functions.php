@@ -1,4 +1,6 @@
 <?php
+
+//Link du JS ET CSS
 function enqueue_vite_assets() {
     $manifest_path = get_template_directory() . '/assets/dist/.vite/manifest.json';
 
@@ -32,6 +34,9 @@ function enqueue_vite_assets() {
         }
     }
 }
+
+
+////Link des fonctions dans le dossier functions
 add_action('wp_enqueue_scripts', 'enqueue_vite_assets');
 
 // Inclure automatiquement tous les fichiers dans le dossier 'functions'
@@ -49,6 +54,9 @@ function include_functions($folder) {
 include_functions(get_template_directory() . '/functions');
 
 
+
+// Désactiver la barre d'administration sur le front-end pour tous les utilisateurs
+add_filter('show_admin_bar', '__return_false');
 
 
 // CPT TAXONOMY

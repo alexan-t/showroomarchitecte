@@ -3,7 +3,7 @@
 
 // Redirection des utilisateurs connectés
 if (is_user_logged_in()) {
-    // wp_redirect(home_url());
+    wp_redirect("/tableau-de-bord");
     exit;
 }
 
@@ -55,12 +55,14 @@ get_header(); ?>
                     class="text-2xl uppercase text-center <?php echo $type === 'professionnel' ? 'color-standard' : 'color-blue'; ?>">
                     J’ai déjà un compte</div>
                 <form method="post" action="" class="connexion-form">
-                    <input type="text" name="username" class="custom-input" placeholder="E-mail" required>
+                    <input type="text" id="inputUsername" name="username" class="custom-input" placeholder="E-mail"
+                        required>
                     <br />
                     <input type="password" name="password" class="custom-input" placeholder="Mot de passe" required>
                     <div class="mt-1 text-end">
-                        <a href="<?php echo wp_lostpassword_url(); ?>"
-                            class="fontroboto color-gray underline italic">Mot de passe oublié</a>
+                        <a href="#" id="forgotPasswordLink" class="fontroboto color-gray underline italic">
+                            Mot de passe oublié
+                        </a>
                     </div>
                     <div class="text-center">
                         <button type="submit" name="login_user"
