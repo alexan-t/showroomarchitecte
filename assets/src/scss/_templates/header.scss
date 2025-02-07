@@ -1,7 +1,19 @@
 header {
-  background-color: #bfbfbf;
+  position: relative;
+  height: auto;
   width: 100%;
   z-index: 100;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+    background-color: #bfbfbf;
+    z-index: -1;
+    opacity: 0.4;
+  }
   .menu-header {
     display: grid;
     grid-template-columns: 30% 40% 30%;

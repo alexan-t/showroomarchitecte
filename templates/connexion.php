@@ -52,7 +52,7 @@ get_header(); ?>
             <div class=" col-md-6 card card-connexion
             <?php echo $type === 'professionnel' ? 'pro-connexion' : 'particulier-connexion'; ?>">
                 <div
-                    class="text-2xl uppercase text-center <?php echo $type === 'professionnel' ? 'color-standard' : 'color-blue'; ?>">
+                    class="text-2xl uppercase text-center <?php echo $type === 'professionnel' ? 'color-professionnel' : 'color-blue'; ?>">
                     J’ai déjà un compte</div>
                 <form method="post" action="" class="connexion-form">
                     <input type="text" id="inputUsername" name="username" class="custom-input" placeholder="E-mail"
@@ -90,7 +90,7 @@ get_header(); ?>
                     <?php wp_nonce_field('user_register_nonce', 'register_nonce'); ?>
                     <div class="text-center">
                         <button type="submit"
-                            class="register btn mt-3 uppercase <?php echo $type === 'professionnel' ? 'btn-outline-standard' : 'btn-outline-blue'; ?>">C’est
+                            class="register btn mt-3 uppercase <?php echo $type === 'professionnel' ? 'btn-outline-professionnel' : 'btn-outline-blue'; ?>">C’est
                             parti !</button>
                     </div>
                 </form>

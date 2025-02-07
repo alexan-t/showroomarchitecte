@@ -20,7 +20,7 @@ get_header();
 <section class="createproject-page my-5">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 left-panel bg-blue">
+            <div class="col-md-5 left-panel bg-blue-light">
                 <?php 
                 if ( has_post_thumbnail() ) {
                     the_post_thumbnail( 'large', ['alt' => get_the_title()] ); 
@@ -29,18 +29,24 @@ get_header();
                 }
                 ?>
                 <div class="p-2">
-                    <p class="color-white">
+                    <p class="color-white uppercase bold text-center">
                         Créez votre fiche de projet pour que nous puissions vous orienter vers le professionnel qui vous
                         correspond le plus.
                     </p>
                 </div>
             </div>
-            <div class="col-md-8 right-panel">
-                <!-- Ajouter ici le formulaire dynamique -->
+            <div class="col-md-7 right-panel bg-grey">
+                <div class="right-panel-title">Créer un projet</div>
+                <div class="p-2">
+                    <div id="form-container">
+                    </div>
+                    <div class="progress-bar-container mt-5">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
 </section>
 
 <?php get_footer(); ?>

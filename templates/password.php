@@ -88,7 +88,7 @@ header {
                     required>
                 <div class="text-center">
                     <button type="submit"
-                        class="register btn mt-3 uppercase <?php echo $user_type === 'professionnel' ? 'btn-outline-standard' : 'btn-outline-blue' ;?>">C’est
+                        class="register btn mt-3 uppercase <?php echo $user_type === 'professionnel' ? 'btn-outline-professionnel' : 'btn-outline-blue' ;?>">C’est
                         parti !</button>
                 </div>
             </form>

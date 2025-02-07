@@ -1,4 +1,12 @@
-<h2 class="color-blue uppercase text-center">Mes informations</h2>
+<?php
+
+// Récupérer le type d'utilisateur à partir de la méta-clé
+$user_type =  get_user_meta( get_current_user_id(), 'user_type', true ) ;
+$userType = $user_type === 'professionnel' ? 'professionnel' : 'particulier';
+?>
+
+<h2 class="<?php echo $user_type === 'professionnel' ? 'color-professionnel' : 'color-blue' ;?> uppercase text-center">Mes
+    informations</h2>
 <p class="text-center color-gray-dark">Ces informations seront visibles :
     <br>- pour les professionnels que vous contactez
     <br>- pour les professionnels qui ont activé un compte Gold souhaitant vous contacter suite à la lecture de votre
@@ -89,7 +97,9 @@
             </div>
             <!-- Bouton de soumission -->
             <div class="col-md-12 mt-3 text-center">
-                <button type="submit" class="btn btn-blue uppercase bold">Mettre à jour</button>
+                <button type="submit"
+                    class="btn <?php echo $user_type === 'professionnel' ? 'btn-professionnel' : 'btn-blue' ;?> uppercase bold">Mettre
+                    à jour</button>
             </div>
             <p class="mt-1 text-sm color-gray-dark italic">* Champ obligatoire pouvant être communiqués aux
                 professionnels que vous contactez ou qui ont activé un profil Gold.</p>

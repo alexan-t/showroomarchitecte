@@ -14,7 +14,7 @@ header {
                 <h1 class="sr-only">Showroom d'arcitecte - architectes vérifiés dans votre ville pour donner vie à vos
                     projets - France </h1>
                 <h2 class="uppercase color-white xlbold text-center">
-                    nos <span class="bg-white color-standard">architectes vérifiés</span>
+                    nos <span class="bg-white color-professionnel">architectes vérifiés</span>
                     dans votre ville pour donner vie à vos projets.</h2>
             </div>
             <div class="landing-slogan">
@@ -80,7 +80,7 @@ header {
                                     src="<?php echo get_template_directory_uri(); ?>/assets/img/imgtest.jpg" alt="">
                                 <div class="talent-text text-center">
                                     <div class="talent-infos-title">L'oasis pictural</div>
-                                    <div class="talent-infos-professionel">Annie, architecte d’intérieur</div>
+                                    <div class="talent-infos-professionnel">Annie, architecte d’intérieur</div>
                                     <div class="talent-infos-localisation">Bordeaux</div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@ header {
                                     src="<?php echo get_template_directory_uri(); ?>/assets/img/imgtest2.jpg" alt="">
                                 <div class="talent-text">
                                     <div class="talent-infos-title">L'oasis pictural</div>
-                                    <div class="talent-infos-professionel">Annie, architecte d’intérieur</div>
+                                    <div class="talent-infos-professionnel">Annie, architecte d’intérieur</div>
                                     <div class="talent-infos-localisation">Bordeaux</div>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@ header {
                                     src="<?php echo get_template_directory_uri(); ?>/assets/img/imgtest3.jpg" alt="">
                                 <div class="talent-text">
                                     <div class="talent-infos-title">L'oasis pictural</div>
-                                    <div class="talent-infos-professionel">Annie, architecte d’intérieur</div>
+                                    <div class="talent-infos-professionnel">Annie, architecte d’intérieur</div>
                                     <div class="talent-infos-localisation">Bordeaux</div>
                                 </div>
                             </div>
@@ -151,7 +151,7 @@ header {
                             choc. Elle a compris de suite ce que nous voulions.</div>
                     </div>
                     <div class="mt-1">
-                        <a href="#" class="btn btn-standard text-center">Trouver mon architecte</a>
+                        <a href="#" class="btn btn-professionnel text-center">Trouver mon architecte</a>
                     </div>
                 </div>
                 <div class="col-md-8">

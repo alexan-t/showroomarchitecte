@@ -1,7 +1,7 @@
 <?php
 // Récupérer l'ID de l'utilisateur connecté
 $user_id = get_current_user_id();
-
+$user_type =  get_user_meta( get_current_user_id(), 'user_type', true ) ;
 // Récupérer l'URL de l'image de profil
 $profile_image = get_user_meta( $user_id, 'profile_image', true );
 
@@ -14,14 +14,17 @@ if ( $profile_image ) {
 ?>
 
 <div class="dashboard-particulier ">
-    <div class="avatar">
-        <?php if ( $profile_image ) : ?>
-        <img src="<?php echo esc_url( $profile_image ); ?>"
-            alt="Photo de profil de <?php echo esc_attr( wp_get_current_user()->display_name ); ?>">
-        <?php else : ?>
-        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/blue-circle.svg"
-            alt="Image de profil par défaut">
-        <?php endif; ?>
+    <div class="avatar-container">
+        <div class="avatar"
+            style="border : 5px solid <?php echo $user_type === 'professionnel' ? '#fc8f02' : '#3968a8' ;?>">
+            <?php if ( $profile_image ) : ?>
+            <img src="<?php echo esc_url( $profile_image ); ?>"
+                alt="Photo de profil de <?php echo esc_attr( wp_get_current_user()->display_name ); ?>">
+            <?php else : ?>
+            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/blue-circle.svg"
+                alt="Image de profil par défaut">
+            <?php endif; ?>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-4 profil">
@@ -45,8 +48,6 @@ if ( $profile_image ) {
                 <ul>
                     <li><a href="<?php echo esc_url( add_query_arg( 'section', 'changer-mdp', site_url('/tableau-de-bord/') ) ); ?>"
                             class="italic color-gray">Changer de mot de passe</a></li>
-                    <li><a href="<?php echo esc_url( add_query_arg( 'section', 'infos-personnelles', site_url('/tableau-de-bord/') ) ); ?>"
-                            class="italic color-gray">Informations personnelles</a></li>
                 </ul>
             </div>
             <div class="mt-1">
@@ -56,7 +57,7 @@ if ( $profile_image ) {
                 <?php my_custom_logout_link(); ?>
             </div>
             <div class="start-projet">
-                <a class="click-btn btn-style902" href="#">
+                <a class="click-btn btn-style902" href="<?php echo site_url('/new-project/'); ?>">
                     <div class="block"><span></span></div>
                     <span data-name="hover">Lancer </span>
                     <span data-name="me">projet</span>
@@ -88,9 +89,10 @@ if ( $profile_image ) {
                     case 'changer-mdp':
                         get_template_part('templates/parts/dashboard-parts/dashboard', 'changer-mdp');
                         break;
-                    case 'infos-personnelles':
-                        get_template_part('templates/parts/dashboard-parts/dashboard', 'infos-personnelles');
+                    case 'edit-projet':
+                        get_template_part('templates/parts/dashboard-parts/dashboard', 'edit-projet');
                         break;
+                        
                     default:
                         get_template_part('templates/parts/dashboard-parts/dashboard', 'mes-informations');
                         break;

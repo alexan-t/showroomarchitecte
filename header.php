@@ -39,11 +39,11 @@ $user_type = get_user_meta( $user_id, 'user_type', true );
                             <a href="<?php echo site_url('/connexion/'); ?>?type=particulier"
                                 class="btn btn-blue uppercase">Particulier</a>
                             <a href="<?php echo site_url('/connexion/'); ?>?type=professionnel"
-                                class="btn btn-standard uppercase">Professionnel</a>
+                                class="btn btn-professionnel uppercase">Professionnel</a>
                             <?php else : ?>
                             <div class="bg-white p-1 text-start bradius-1">
                                 <div
-                                    class="mb-1 text-sm <?php echo $user_type === 'professionnel' ? 'color-standard' : 'color-blue' ;?>">
+                                    class="mb-1 text-sm <?php echo $user_type === 'professionnel' ? 'color-professionnel' : 'color-blue' ;?>">
                                     Bienvenue, <span
                                         class="capitalize bold"><?php echo esc_html( wp_get_current_user()->display_name ); ?></span>
                                 </div>
@@ -75,12 +75,12 @@ $user_type = get_user_meta( $user_id, 'user_type', true );
                         <a href="<?php echo esc_url( site_url('/connexion/') ); ?>?type=particulier"
                             class="col-md-6 btn btn-blue uppercase bold">Particulier</a>
                         <a href="<?php echo esc_url( site_url('/connexion/') ); ?>?type=professionnel"
-                            class="col-md-6 btn btn-standard uppercase bold">Professionnel</a>
+                            class="col-md-6 btn btn-professionnel uppercase bold">Professionnel</a>
                     </div>
                     <?php else : ?>
                     <div class="bg-white p-1 text-start bradius-1">
                         <div
-                            class="mb-1 text-sm <?php echo $user_type === 'professionnel' ? 'color-standard' : 'color-blue' ;?>">
+                            class="mb-1 text-sm <?php echo $user_type === 'professionnel' ? 'color-professionnel' : 'color-blue' ;?>">
                             Bienvenue, <span
                                 class="capitalize bold"><?php echo esc_html( wp_get_current_user()->display_name ); ?></span>
                         </div>

@@ -128,7 +128,7 @@
           font-weight: bold;
           color: #fff;
         }
-        &-professionel {
+        &-professionnel {
           margin-top: 5px;
           font-size: 14px;
           color: #ffba4a;
@@ -167,7 +167,7 @@
         position: absolute;
         left: 10px;
         top: -10px;
-        color: var(--color-standard);
+        color: var(--color-professionnel);
         font-size: var(--font-size-xl);
       }
       &::after {
@@ -175,7 +175,7 @@
         position: absolute;
         left: 160px;
         bottom: -10px;
-        color: var(--color-standard);
+        color: var(--color-professionnel);
         font-size: var(--font-size-xl);
         transform: rotate(180deg);
       }

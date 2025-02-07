@@ -143,4 +143,90 @@ jQuery(document).ready(function ($) {
       console.log("Image preview reset to default.");
     }
   });
+
+  //FORMULAIRE PRO
+  const form = document.getElementById("pro-info-form");
+
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      // ✅ Récupérer les types d'architectes cochés
+      const architectTypes = [];
+      form
+        .querySelectorAll('input[name="architecte_type[]"]:checked')
+        .forEach((checkbox) => {
+          architectTypes.push(checkbox.value);
+        });
+
+      Swal.fire({
+        title: "Êtes-vous sûr ?",
+        text: "Vous allez enregistrer vos informations professionnelles.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oui, enregistrer !",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // ✅ Préparer les données à envoyer
+          const dataToSend = new URLSearchParams();
+          dataToSend.append("action", "update_pro_infos");
+          dataToSend.append("security", formData.get("security"));
+          dataToSend.append(
+            "diplome_principal",
+            formData.get("diplome_principal")
+          );
+          dataToSend.append(
+            "annees_experience",
+            formData.get("annees_experience")
+          );
+          dataToSend.append(
+            "budget_moyen_chantiers",
+            formData.get("budget_moyen_chantiers")
+          );
+          dataToSend.append(
+            "motivation_metier",
+            formData.get("motivation_metier")
+          );
+
+          // ✅ Ajouter les types d'architectes cochés
+          architectTypes.forEach((type) => {
+            dataToSend.append("architecte_type[]", type);
+          });
+
+          // ✅ Envoi de la requête AJAX
+          fetch(ajax_object.ajax_url, {
+            method: "POST",
+            body: dataToSend,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Succès",
+                  text: data.data.message,
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Erreur",
+                  text: data.data.message || "Une erreur est survenue.",
+                });
+              }
+            })
+            .catch(() => {
+              Swal.fire({
+                icon: "error",
+                title: "Erreur",
+                text: "Impossible de traiter la demande.",
+              });
+            });
+        }
+      });
+    });
+  }
 });

@@ -40,13 +40,14 @@ function add_vite_assets() {
 	}
 
 	foreach ( $scss_files as $handle => $file ) {
-		$css_uri = VITE_SERVER . '/assets/src/scss/' . $file;
-		if ( VITE_BUILD ) {
-			$css_uri = DIST_URI . '/' . $manifest[ 'assets/src/scss/' . $file ]['file'];
+		$key = 'assets/src/scss/' . $file;
+		if ( isset( $manifest[$key] ) ) {
+			$css_uri = VITE_BUILD ? DIST_URI . '/' . $manifest[$key]['file'] : VITE_SERVER . '/assets/src/scss/' . $file;
+			wp_enqueue_style( $handle, $css_uri, null, null );
+		} else {
+			error_log( "SCSS file '$key' not found in manifest." ); // Pour déboguer
 		}
-
-		wp_enqueue_style( $handle, $css_uri, null, null );
-	}
+	}	
 }
 
 add_action( 'wp_enqueue_scripts', 'add_vite_assets', 100 );
