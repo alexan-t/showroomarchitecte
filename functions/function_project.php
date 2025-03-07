@@ -52,7 +52,7 @@ add_action('wp_ajax_nopriv_load_form_step', 'load_form_step_callback');
 function create_projects_table() {
     global $wpdb;
 
-    $table_name = $wpdb->prefix . 'projects';
+    $table_name = esc_sql($wpdb->prefix . 'projects');
 
     if ($wpdb->get_var("SHOW TABLES LIKE '{$table_name}'") != $table_name) {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -66,6 +66,8 @@ function create_projects_table() {
             proprietaire VARCHAR(255) NOT NULL,
             projet VARCHAR(255) NOT NULL,
             city VARCHAR(255) NOT NULL,
+            latitude FLOAT NULL,  -- Nouvelle colonne latitude
+            longitude FLOAT NULL, -- Nouvelle colonne longitude
             budget VARCHAR(255) NOT NULL,
             total_surface VARCHAR(255) NOT NULL,
             work_surface VARCHAR(255) NOT NULL,
@@ -87,8 +89,22 @@ function create_projects_table() {
         } else {
             error_log("Échec de la création de la table '{$table_name}'.");
         }
+    } else {
+        // Vérifier si les colonnes latitude et longitude existent, sinon les ajouter
+        $columns = $wpdb->get_results("SHOW COLUMNS FROM $table_name LIKE 'latitude'");
+        if (empty($columns)) {
+            $wpdb->query("ALTER TABLE $table_name ADD COLUMN latitude FLOAT NULL");
+            error_log("Ajout de la colonne latitude.");
+        }
+
+        $columns = $wpdb->get_results("SHOW COLUMNS FROM $table_name LIKE 'longitude'");
+        if (empty($columns)) {
+            $wpdb->query("ALTER TABLE $table_name ADD COLUMN longitude FLOAT NULL");
+            error_log("Ajout de la colonne longitude.");
+        }
     }
 }
+
 
 
 // Appeler la fonction lors de l'activation du thème ou d'un plugin
@@ -125,7 +141,7 @@ function submit_project_form_callback() {
     $form_data = array_merge($session_data, $submitted_data);
 
     // Validation des champs obligatoires
-    $required_fields = ['search', 'property','proprietaire','projet', 'city', 'total_surface', 'work_surface', 'budget', 'project_name', 'project_description'];
+    $required_fields = ['search', 'property', 'proprietaire', 'projet', 'city', 'total_surface', 'work_surface', 'budget', 'project_name', 'project_description'];
     foreach ($required_fields as $field) {
         if (empty($form_data[$field])) {
             wp_send_json_error("Le champ $field est requis.");
@@ -133,10 +149,29 @@ function submit_project_form_callback() {
         }
     }
 
+    // Récupérer la latitude et la longitude en fonction de la ville
+    $city = urlencode($form_data['city']);
+    $api_url = "https://nominatim.openstreetmap.org/search?q={$city}&format=json&limit=1";
+
+    $response = wp_remote_get($api_url, ['timeout' => 10]);
+
+    $latitude = null;
+    $longitude = null;
+
+    if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) == 200) {
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if (!empty($data) && isset($data[0]['lat']) && isset($data[0]['lon'])) {
+            $latitude = floatval($data[0]['lat']);
+            $longitude = floatval($data[0]['lon']);
+        }
+    }
+
     // Sauvegarder dans la base de données
     global $wpdb;
-    $table_name = $wpdb->prefix . 'projects';
-    
+    $table_name = esc_sql($wpdb->prefix . 'projects');
+
     $inserted = $wpdb->insert(
         $table_name,
         [
@@ -146,6 +181,8 @@ function submit_project_form_callback() {
             'proprietaire' => $form_data['proprietaire'],
             'projet' => $form_data['projet'],
             'city' => $form_data['city'],
+            'latitude' => $latitude,
+            'longitude' => $longitude,
             'budget' => $form_data['budget'],
             'total_surface' => $form_data['total_surface'],
             'work_surface' => $form_data['work_surface'],
@@ -154,29 +191,22 @@ function submit_project_form_callback() {
             'needs' => $form_data['needs'],
         ],
         [
-            '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'
+            '%d', '%s', '%s', '%s', '%s', '%s', '%f', '%f', '%s', '%s', '%s', '%s', '%s', '%s'
         ]
     );
-    
-    
-    
+
     if ($inserted === false) {
         error_log("Erreur SQL : " . $wpdb->last_error);
         error_log("Requête : " . $wpdb->last_query);
-    }
-    
-    
-    
-
-    if ($inserted) {
-        wp_send_json_success("Projet enregistré avec succès !");
-    } else {
         wp_send_json_error("Une erreur est survenue lors de l'enregistrement du projet.");
+    } else {
+        wp_send_json_success("Projet enregistré avec succès !");
     }
 
     wp_die();
 }
 add_action('wp_ajax_submit_project_form', 'submit_project_form_callback');
+
 add_action('wp_ajax_nopriv_submit_project_form', 'submit_project_form_callback');
 
 // Debug session
@@ -197,7 +227,7 @@ function update_project_callback() {
     }
 
     global $wpdb;
-    $table_name = $wpdb->prefix . 'projects';
+    $table_name = esc_sql($wpdb->prefix . 'projects');
 
     $project_id = intval($_POST['project_id']);
     $user_id = get_current_user_id();
@@ -231,12 +261,31 @@ function update_project_callback() {
         'needs' => maybe_serialize($_POST['needs'] ?? []),
     ];
 
+    // Vérifier si la ville a changé
+    if ($updated_data['city'] !== $project->city) {
+        // Récupérer les coordonnées GPS en fonction de la nouvelle ville
+        $city = urlencode($updated_data['city']);
+        $api_url = "https://nominatim.openstreetmap.org/search?q={$city}&format=json&limit=1";
+
+        $response = wp_remote_get($api_url, ['timeout' => 10]);
+
+        if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) == 200) {
+            $body = wp_remote_retrieve_body($response);
+            $data = json_decode($body, true);
+
+            if (!empty($data) && isset($data[0]['lat']) && isset($data[0]['lon'])) {
+                $updated_data['latitude'] = floatval($data[0]['lat']);
+                $updated_data['longitude'] = floatval($data[0]['lon']);
+            }
+        }
+    }
+
     // Mettre à jour la base de données
     $updated = $wpdb->update(
         $table_name,
         $updated_data,
         ['id' => $project_id],
-        ['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'],
+        ['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%f', '%f'],
         ['%d']
     );
 

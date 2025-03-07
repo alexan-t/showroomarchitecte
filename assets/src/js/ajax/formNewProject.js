@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
               title: "Succès",
               text: response.data,
             }).then(() => {
-              window.location.href = "/search-results"; // Redirection après succès
+              window.location.href = "/resultats-recherche-architecte"; // Redirection après succès
             });
           } else {
             Swal.fire({

@@ -5,7 +5,8 @@ $user_type =  get_user_meta( get_current_user_id(), 'user_type', true ) ;
 $userType = $user_type === 'professionnel' ? 'professionnel' : 'particulier';
 ?>
 
-<h2 class="<?php echo $user_type === 'professionnel' ? 'color-professionnel' : 'color-blue' ;?> uppercase text-center">Mes
+<h2 class="color-<?php echo $user_type ?> uppercase text-center">
+    Mes
     informations</h2>
 <p class="text-center color-gray-dark">Ces informations seront visibles :
     <br>- pour les professionnels que vous contactez
@@ -49,9 +50,9 @@ $userType = $user_type === 'professionnel' ? 'professionnel' : 'particulier';
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <label for="adress">Adresse</label>
-                    <input type="text" id="adress" name="adress" class="custom-input" placeholder="Adresse"
-                        value="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'adress', true ) ); ?>">
+                    <label for="address">Adresse</label>
+                    <input type="text" id="address" name="address" class="custom-input" placeholder="Adresse"
+                        value="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'address', true ) ); ?>">
                 </div>
             </div>
             <div class="row">
@@ -97,8 +98,7 @@ $userType = $user_type === 'professionnel' ? 'professionnel' : 'particulier';
             </div>
             <!-- Bouton de soumission -->
             <div class="col-md-12 mt-3 text-center">
-                <button type="submit"
-                    class="btn <?php echo $user_type === 'professionnel' ? 'btn-professionnel' : 'btn-blue' ;?> uppercase bold">Mettre
+                <button type="submit" class="btn btn-<?php echo $user_type?> uppercase bold">Mettre
                     à jour</button>
             </div>
             <p class="mt-1 text-sm color-gray-dark italic">* Champ obligatoire pouvant être communiqués aux

@@ -5,6 +5,10 @@ get_header();
 header {
     position: absolute;
 }
+
+.menu-header-links a {
+    color: #fff !important;
+}
 </style>
 <div id="homepage">
     <section class="landing"

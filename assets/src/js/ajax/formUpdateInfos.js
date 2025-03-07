@@ -5,6 +5,11 @@ jQuery(document).ready(function ($) {
     return;
   }
 
+  if (typeof ajax_object === "undefined" || !ajax_object.ajaxurl) {
+    console.error("ajax_object is not defined or missing ajaxurl.");
+    return;
+  }
+
   var toastMixin = Swal.mixin({
     toast: true,
     icon: "success",
@@ -34,7 +39,7 @@ jQuery(document).ready(function ($) {
     var formData = new FormData(this);
 
     // Ajouter le nonce à FormData
-    formData.append("nonce", formUpdateInfos.nonce);
+    formData.append("nonce", ajax_object.nonce);
     formData.append("action", "update_mes_informations"); // Assurez-vous que l'action correspond à celle définie en PHP
 
     console.log("FormData prepared:", formData);
@@ -50,7 +55,7 @@ jQuery(document).ready(function ($) {
 
     // Envoyer la requête AJAX
     $.ajax({
-      url: formUpdateInfos.ajaxurl,
+      url: ajax_object.ajaxurl,
       type: "POST",
       data: formData,
       contentType: false, // Nécessaire pour envoyer les fichiers
@@ -138,7 +143,7 @@ jQuery(document).ready(function ($) {
       // Réinitialiser l'image de prévisualisation si aucun fichier n'est sélectionné
       $("#imagePreview").css(
         "background-image",
-        'url("' + formUpdateInfos.default_image + '")'
+        'url("' + ajax_object.default_image + '")'
       );
       console.log("Image preview reset to default.");
     }
@@ -153,7 +158,7 @@ jQuery(document).ready(function ($) {
 
       const formData = new FormData(form);
 
-      // ✅ Récupérer les types d'architectes cochés
+      // Récupérer les types d'architectes cochés
       const architectTypes = [];
       form
         .querySelectorAll('input[name="architecte_type[]"]:checked')
@@ -171,10 +176,10 @@ jQuery(document).ready(function ($) {
         confirmButtonText: "Oui, enregistrer !",
       }).then((result) => {
         if (result.isConfirmed) {
-          // ✅ Préparer les données à envoyer
+          //Préparer les données à envoyer
           const dataToSend = new URLSearchParams();
           dataToSend.append("action", "update_pro_infos");
-          dataToSend.append("security", formData.get("security"));
+          dataToSend.append("security", ajax_object.update_pro_infos_nonce);
           dataToSend.append(
             "diplome_principal",
             formData.get("diplome_principal")
@@ -192,13 +197,13 @@ jQuery(document).ready(function ($) {
             formData.get("motivation_metier")
           );
 
-          // ✅ Ajouter les types d'architectes cochés
+          //Ajouter les types d'architectes cochés
           architectTypes.forEach((type) => {
             dataToSend.append("architecte_type[]", type);
           });
 
-          // ✅ Envoi de la requête AJAX
-          fetch(ajax_object.ajax_url, {
+          // Envoi de la requête AJAX
+          fetch(ajax_object.ajaxurl, {
             method: "POST",
             body: dataToSend,
           })
@@ -206,9 +211,17 @@ jQuery(document).ready(function ($) {
             .then((data) => {
               if (data.success) {
                 Swal.fire({
+                  toast: true,
                   icon: "success",
                   title: "Succès",
                   text: data.data.message,
+                  timer: 3000,
+                  timerProgressBar: true,
+                  position: "top-right",
+                  didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
                 });
               } else {
                 Swal.fire({

@@ -18,8 +18,12 @@
 		"@splidejs/splide": "^4.1.4",
 		"@splidejs/splide-extension-auto-scroll": "^0.5.3",
 		"@studio-freight/lenis": "^1.0.42",
+		"@tiptap/core": "^2.11.5",
+		"@tiptap/pm": "^2.11.5",
+		"@tiptap/starter-kit": "^2.11.5",
 		"animejs": "^3.2.2",
 		"bootstrap": "5.3.3",
+		"glightbox": "^3.3.1",
 		"lenis": "^1.1.18",
 		"modujs": "^1.4.2",
 		"sweetalert2": "^11.6.13"

@@ -1,0 +1,131 @@
+.edit-img {
+  position: relative;
+  cursor: pointer;
+  &::before {
+    transition: 0.3s ease-in-out;
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #000;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+  &:hover {
+    &::before {
+      opacity: 0.5;
+    }
+    .edit-img-text {
+      opacity: 1;
+    }
+  }
+  &-text {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+    color: white;
+    font-weight: 600;
+    font-size: 3rem;
+    z-index: 10;
+    position: absolute;
+    opacity: 0;
+    transition: 0.3s ease-in-out;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.edit-profil-image {
+  cursor: pointer;
+  transition: 0.3s ease-out;
+}
+
+.editable-input {
+  border-radius: 0;
+}
+.editable-textarea {
+  border-radius: 0;
+  resize: none;
+  height: 200px;
+}
+
+.edit-project-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.delete-project {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #333;
+  padding: 5px 10px;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  &:hover {
+    background-color: red;
+    color: #fff;
+  }
+}
+
+.edit-project-wrapper:hover .delete-project {
+  opacity: 1;
+  visibility: visible;
+}
+
+.add-project {
+  position: relative;
+  bottom: 20px;
+  right: 20px;
+}
+
+.edit-single-page {
+  input[type="checkbox"] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+
+  label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 60px;
+    height: 40px;
+    background: grey;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+  }
+
+  label:after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    border-radius: 90px;
+    transition: 0.3s;
+  }
+
+  input:checked + label {
+    background: #bada55;
+  }
+
+  input:checked + label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+  }
+
+  label:active:after {
+    width: 30px;
+  }
+}

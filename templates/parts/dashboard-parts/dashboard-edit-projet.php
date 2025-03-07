@@ -15,7 +15,7 @@ $project_id = intval($_GET['project_id']);
 $user_id = get_current_user_id();
 
 // Récupérer le projet de l'utilisateur connecté
-$table_name = $wpdb->prefix . 'projects';
+$table_name = esc_sql($wpdb->prefix . 'projects');
 $project = $wpdb->get_row(
     $wpdb->prepare(
         "SELECT * FROM $table_name WHERE id = %d AND user_id = %d",
@@ -29,8 +29,26 @@ if (!$project) {
     return;
 }
 
-// Si le formulaire est soumis
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Vérifier si l'utilisateur souhaite réactiver le projet
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reactivate_project'])) {
+    $updated = $wpdb->update(
+        $table_name,
+        ['status' => 'active', 'closed_at' => null], // Réactiver le projet et réinitialiser la date de clôture
+        ['id' => $project_id, 'user_id' => $user_id],
+        ['%s', 'NULL'],
+        ['%d', '%d']
+    );
+
+    if ($updated !== false) {
+        echo '<p class="success">Le projet a été réactivé avec succès.</p>';
+        $project->status = 'active'; // Mettre à jour l'affichage localement
+    } else {
+        echo '<p class="error">Erreur lors de la réactivation du projet.</p>';
+    }
+}
+
+// Si le formulaire est soumis (Mise à jour des informations du projet)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reactivate_project'])) {
     // Sanitiser les données envoyées
     $updated_data = [
         'search' => sanitize_text_field($_POST['search']),
@@ -50,11 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updated = $wpdb->update(
         $table_name,
         $updated_data,
-        [ 'id' => $project_id, 'user_id' => $user_id ],
+        ['id' => $project_id, 'user_id' => $user_id],
         [
             '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'
         ],
-        [ '%d', '%d' ]
+        ['%d', '%d']
     );
 
     if ($updated !== false) {
@@ -249,7 +267,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <button type="submit" class="btn btn-blue">Mettre à jour</button>
     </form>
+
 </div>
+<?php if ($project->status !== 'active'): ?>
+<form method="POST">
+    <input type="hidden" name="reactivate_project" value="1">
+    <button type="submit" class="btn btn-green">Réactiver le projet</button>
+</form>
+<?php endif; ?>
+
+
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {

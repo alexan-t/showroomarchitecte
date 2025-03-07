@@ -1,0 +1,20 @@
+.archive-professionnel {
+  padding: 5rem 0;
+  .list-filter_container {
+    border: 1px solid #e6e7ec;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0px 0px 4px #e6e7ec;
+    label.label-title {
+      font-weight: 600;
+    }
+    .filter-architecte-type {
+      .checkbox-group {
+        .checkbox-item {
+          display: flex;
+          gap: 1rem;
+        }
+      }
+    }
+  }
+}

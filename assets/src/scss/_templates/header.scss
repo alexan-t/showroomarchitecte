@@ -25,6 +25,7 @@ header {
       height: 100%;
       align-items: end;
       display: flex;
+      justify-content: start;
       margin-bottom: 3rem;
       @include media-breakpoint-down(md) {
         justify-content: end;
@@ -79,7 +80,7 @@ header {
           height: 100%;
           ul {
             display: flex;
-            gap: 1rem;
+            gap: 2rem;
             justify-content: center;
             height: 100%;
             @include media-breakpoint-down(md) {
@@ -90,8 +91,10 @@ header {
             li {
               a {
                 position: relative;
-                color: #000;
+                color: var(--color-blue-dark);
                 font-size: var(--font-size-base);
+                font-weight: 600;
+                font-size: var(--font-size-md);
                 &:before {
                   content: "";
                   position: absolute;
@@ -152,6 +155,10 @@ header {
     &-account {
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
       &-container {
         text-align: end;
         display: flex;

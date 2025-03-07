@@ -99,7 +99,7 @@ function handle_forgot_password() {
     $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
 
     if (empty($email) || !is_email($email)) {
-        wp_send_json_error(['message' => 'Veuillez entrer une adresse e-mail valide.']);
+        wp_send_json_error(['message' => 'Veuillez entrer une addresse e-mail valide.']);
         return;
     }
 
@@ -107,7 +107,7 @@ function handle_forgot_password() {
     $user = get_user_by('email', $email);
 
     if (!$user) {
-        wp_send_json_error(['message' => 'Aucun utilisateur trouvé avec cette adresse e-mail.']);
+        wp_send_json_error(['message' => 'Aucun utilisateur trouvé avec cette addresse e-mail.']);
         return;
     }
 

@@ -35,7 +35,7 @@ function handle_register_user() {
 
     // Validation des données
     if (empty($email) || !is_email($email)) {
-        wp_send_json_error(['message' => 'Adresse e-mail invalide.']);
+        wp_send_json_error(['message' => 'addresse e-mail invalide.']);
         return;
     }
 
@@ -52,12 +52,12 @@ function handle_register_user() {
     
         if ($password_not_set) {
             wp_send_json_error([
-                'message' => 'Un compte existe déjà avec cette adresse e-mail, mais le mot de passe n\'a pas encore été défini. <br> 
+                'message' => 'Un compte existe déjà avec cette addresse e-mail, mais le mot de passe n\'a pas encore été défini. <br> 
                 <a href="#" class="resend-email underline italic color-white" data-user-id="' . esc_attr($user->ID) . '" data-security="' . esc_attr(wp_create_nonce('resend_email_nonce')) . '">Créer un mot de passe</a>'
             ]);
         } else {
             wp_send_json_error([
-                'message' => 'Un compte existe déjà avec cette adresse e-mail. <br>'
+                'message' => 'Un compte existe déjà avec cette addresse e-mail. <br>'
             ]);
         }
     

@@ -85,7 +85,7 @@ get_header(); ?>
                     l’architecte de
                     votre projet.</p>
                 <form method="post" class="inscription-form">
-                    <input type="email" name="email" class="custom-input" placeholder="Adresse e-mail" required>
+                    <input type="email" name="email" class="custom-input" placeholder="addresse e-mail" required>
                     <input type="hidden" name="type" value="<?php echo $type; ?>">
                     <?php wp_nonce_field('user_register_nonce', 'register_nonce'); ?>
                     <div class="text-center">

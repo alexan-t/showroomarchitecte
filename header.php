@@ -16,7 +16,7 @@ $user_type = get_user_meta( $user_id, 'user_type', true );
     <div id="page" class="site">
 
         <header id="masthead" class="site-header">
-            <div class="container menu-header">
+            <div class="menu-header">
                 <div class="menu-header-logo">
                     <a href="<?php echo site_url('/'); ?>">
                         <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.svg"
@@ -79,8 +79,7 @@ $user_type = get_user_meta( $user_id, 'user_type', true );
                     </div>
                     <?php else : ?>
                     <div class="bg-white p-1 text-start bradius-1">
-                        <div
-                            class="mb-1 text-sm <?php echo $user_type === 'professionnel' ? 'color-professionnel' : 'color-blue' ;?>">
+                        <div class="mb-1 text-sm color-<?php echo $user_type ?>">
                             Bienvenue, <span
                                 class="capitalize bold"><?php echo esc_html( wp_get_current_user()->display_name ); ?></span>
                         </div>

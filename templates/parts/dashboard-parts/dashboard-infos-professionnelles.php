@@ -12,7 +12,7 @@ $architect_types = get_user_meta($user_id, 'architecte_type', true);
 $architect_types = is_array($architect_types) ? $architect_types : [];
 
 // Génération d'un nonce pour sécuriser la requête AJAX
-$nonce = wp_create_nonce('update_pro_infos');
+$nonce = wp_create_nonce('update_pro_infos_nonce');
 ?>
 
 <h2 class="color-<?php echo esc_attr($user_type); ?> uppercase text-center">Mes informations professionnelles</h2>
@@ -65,8 +65,9 @@ $nonce = wp_create_nonce('update_pro_infos');
                     <?php endforeach; ?>
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+            <div class="text-center">
+                <button type="submit" class="btn btn-<?php echo $user_type ?>">Enregistrer les modifications</button>
+            </div>
         </form>
     </div>
 </div>

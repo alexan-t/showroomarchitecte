@@ -15,8 +15,7 @@ if ( $profile_image ) {
 
 <div class="dashboard-particulier ">
     <div class="avatar-container">
-        <div class="avatar"
-            style="border : 5px solid <?php echo $user_type === 'professionnel' ? '#fc8f02' : '#3968a8' ;?>">
+        <div class="avatar border-<?php echo $user_type ?>">
             <?php if ( $profile_image ) : ?>
             <img src="<?php echo esc_url( $profile_image ); ?>"
                 alt="Photo de profil de <?php echo esc_attr( wp_get_current_user()->display_name ); ?>">
@@ -57,7 +56,7 @@ if ( $profile_image ) {
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo esc_url(admin_url('admin.php?page=edit-professionnel')); ?>"
+                        <a href="<?php echo esc_url(showroom_get_edit_profile_url($user_id)); ?>"
                             class="italic color-gray">
                             Editer ma page
                         </a>

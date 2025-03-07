@@ -7,7 +7,7 @@ if (isset($_POST['step'])) {
     // Enregistrer les choix précédents dans la session
     if (isset($_POST['selected'])) {
         foreach ($_POST['selected'] as $key => $value) {
-            $_SESSION['form_data'][$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            $_SESSION['form_data'][$key] = sanitize_text_field($value, ENT_QUOTES, 'UTF-8');
         }
     }
 

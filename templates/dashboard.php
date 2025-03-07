@@ -19,7 +19,7 @@ get_header();
 
 <section class="dashboard-page my-5">
     <div class="container">
-        <?php if ( $user_type === 'professionnel' ) : ?>
+        <?php if ( $user_type !== 'particulier' ) : ?>
         <!-- <h2>Bienvenue, <?php echo esc_html( wp_get_current_user()->display_name ); ?> (Professionnel)</h2> -->
         <?php include( get_template_directory() . '/templates/parts/dashboard-professionnel.php' ); ?>
         <?php elseif ( $user_type === 'particulier' ) : ?>

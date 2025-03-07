@@ -45,7 +45,7 @@ function add_vite_assets() {
 			$css_uri = VITE_BUILD ? DIST_URI . '/' . $manifest[$key]['file'] : VITE_SERVER . '/assets/src/scss/' . $file;
 			wp_enqueue_style( $handle, $css_uri, null, null );
 		} else {
-			error_log( "SCSS file '$key' not found in manifest." ); // Pour déboguer
+			// error_log( "SCSS file '$key' not found in manifest." ); // Pour déboguer
 		}
 	}	
 }
