@@ -11,43 +11,12 @@ header {
 }
 </style>
 <div id="homepage">
-    <section class="landing"
-        style="background-image: url('<?php echo esc_url(get_the_post_thumbnail_url(null, 'full')); ?>');">
-        <div class="container flex flex-col justify-center items-center pt-3 h-100">
-            <div class="landing-title">
-                <h1 class="sr-only">Showroom d'arcitecte - architectes vérifiés dans votre ville pour donner vie à vos
-                    projets - France </h1>
-                <h2 class="uppercase color-white xlbold text-center">
-                    nos <span class="bg-white color-professionnel">architectes vérifiés</span>
-                    dans votre ville pour donner vie à vos projets.</h2>
-            </div>
-            <div class="landing-slogan">
-                <p class="color-white text-xl">Architecte DPLG, architecte, ouvrier de France, architecte d’intérieur
-                    et
-                    paysagiste.</p>
-            </div>
-            <div class="form ">
-                <form action="" class="row">
-                    <div class="custom-select col-md-6">
-                        <select>
-                            <option>Je recherche...</option>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                        </select>
-                    </div>
-                    <div class="custom-select col-md-6">
-                        <select>
-                            <option>Type de bien</option>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                        </select>
-                    </div>
-                </form>
-                <button type="submit">Rechercher</button>
-            </div>
-        </div>
+    <section class="landing">
+        <video autoplay loop muted playsinline class="background-video">
+            <source src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/landing-vid.mp4'); ?>"
+                type="video/mp4">
+            Votre navigateur ne supporte pas les vidéos HTML5.
+        </video>
     </section>
     <section class="reassurance pt-5 pb-5 bg-grey">
         <div class="container">

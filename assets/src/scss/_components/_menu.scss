@@ -1,62 +1,82 @@
-$color_1: #000;
-$background-color_1: currentColor;
+$btn-height: 50px;
+$btn-width: 50px;
+$bar-width: 40px;
+$bar-height: 3px;
+$bar-distance: -14px;
+$nav-tog-dur: 0.5s;
 
-.menu.icon.open {
-  color: white;
-  position: absolute;
-  margin-top: 0;
-  margin-left: 2px;
-  width: 21px;
-  height: 21px;
-  &:before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    width: 30px;
-    height: 2px;
-    background-color: $background-color_1;
-    -webkit-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-  }
-  &:after {
-    content: "";
-    position: absolute;
-    top: 10px;
-    width: 30px;
-    height: 2px;
-    background-color: $background-color_1;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-  }
-}
+.nav-btn {
+  width: $btn-width;
+  height: $btn-height;
+  box-sizing: border-box;
+  display: block;
+  cursor: pointer;
+  position: fixed; //span has position: absolute
+  top: 15px;
+  left: 15px;
+  z-index: 999999;
 
-$color_1: #000;
-$background-color_1: currentColor;
+  span {
+    display: block;
 
-.menu.icon {
-  color: #000;
-  position: absolute;
-  margin-left: 2px;
-  margin-top: 10px;
-  width: 30px;
-  height: 2px;
-  background-color: currentColor;
-  &:before {
-    content: "";
     position: absolute;
-    top: -10px;
-    left: 0;
-    width: 30px;
-    height: 2px;
-    background-color: $background-color_1;
+    top: calc(#{$btn-height}/ 2 - #{$bar-height}/ 2);
+    bottom: calc(#{$btn-height}/ 2 - #{$bar-height}/ 2);
+    left: calc((#{$btn-width} - #{$bar-width}) / 2);
+    right: calc((#{$btn-width} - #{$bar-width}) / 2);
+    background: var(--color-white);
+
+    transition: all 0s; //give the effect that the bars make the middle vanish
+    transition-delay: $nav-tog-dur;
+    &:hover {
+      &::before,
+      &::after {
+      }
+    }
+    &::before,
+    &::after {
+      content: "";
+      width: 100%;
+      height: $bar-height;
+      display: block;
+
+      position: absolute;
+      left: 0;
+
+      background: var(--color-white);
+      transition-duration: $nav-tog-dur, $nav-tog-dur, 1s;
+      transition-delay: $nav-tog-dur, 0s, 0s; //gets overwritten when on, so it's the ending transition
+    }
+
+    &::before {
+      top: $bar-distance;
+      transition-property: top, transform, background;
+    }
+
+    &::after {
+      bottom: $bar-distance;
+      transition-property: bottom, transform, background;
+    }
   }
-  &:after {
-    content: "";
-    position: absolute;
-    top: 10px;
-    left: 0;
-    width: 30px;
-    height: 2px;
-    background-color: $background-color_1;
+
+  &.nav-on span {
+    background: none;
+
+    &::before,
+    &::after {
+      transition-delay: 0s, $nav-tog-dur, $nav-tog-dur;
+    }
+
+    &::before {
+      top: 0;
+      transform: rotate(45deg);
+      background: var(--color-white);
+    }
+
+    &::after {
+      bottom: 0;
+      transform: rotate(-45deg);
+      background: var(--color-white);
+    }
   }
 }

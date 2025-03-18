@@ -17,84 +17,19 @@ $user_type = get_user_meta( $user_id, 'user_type', true );
 
         <header id="masthead" class="site-header">
             <div class="menu-header">
+                <div class="menu_toggle">
+                    <div class="nav-btn" title="Toggle navigation">
+                        <span></span>
+                    </div>
+                </div>
                 <div class="menu-header-logo">
-                    <a href="<?php echo site_url('/'); ?>">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.svg"
+                    <a class="flex justify-center" href="<?php echo site_url('/'); ?>">
+                        <img class="p-1" src="<?php echo get_template_directory_uri(); ?>/assets/img/image.png"
                             alt="Logo de Showroom d'Architecte">
                     </a>
                 </div>
-                <div class="menu-header-links">
-                    <button id="menu-button" data-module aria-expanded="false" aria-label="Toggle menu">
-                        <div class="menu icon"></div>
-                    </button>
-                    <div class="menu-header-links-container">
-                        <div class="menu-header-links-container-buttons-mobile">
-                            <?php if ( ! is_user_logged_in() ) : ?>
-                            <div class="menu-header-links-container-buttons-mobile-text">
-                                <span>Mon espace</span>
-                                <svg class="icon icon-xl" aria-hidden="true">
-                                    <use xlink:href="#profil-icon"></use>
-                                </svg>
-                            </div>
-                            <a href="<?php echo site_url('/connexion/'); ?>?type=particulier"
-                                class="btn btn-blue uppercase">Particulier</a>
-                            <a href="<?php echo site_url('/connexion/'); ?>?type=professionnel"
-                                class="btn btn-professionnel uppercase">Professionnel</a>
-                            <?php else : ?>
-                            <div class="bg-white p-1 text-start bradius-1">
-                                <div
-                                    class="mb-1 text-sm <?php echo $user_type === 'professionnel' ? 'color-professionnel' : 'color-blue' ;?>">
-                                    Bienvenue, <span
-                                        class="capitalize bold"><?php echo esc_html( wp_get_current_user()->display_name ); ?></span>
-                                </div>
-                                <a href="<?php echo esc_url( site_url('/tableau-de-bord') ); ?>"
-                                    class="justify-center flex gap-1 color-dark">
-                                    <svg class="icon icon-xl" aria-hidden="true">
-                                        <use xlink:href="#profil-icon"></use>
-                                    </svg>
-                                    <span>Mon compte</span>
-                                </a>
-                                <a href="" class="justify-center flex gap-1 italic color-gray">
-                                    <?php my_custom_logout_link(); ?>
-                                </a>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                        <?php wp_nav_menu( array( 'theme_location' => 'menu-main', 'menu_id' => 'menu-main' ) ); ?>
-                    </div>
-                </div>
-                <div class="menu-header-account">
-                    <?php if ( ! is_user_logged_in() ) : ?>
-                    <div class="menu-header-account-container mb-1">
-                        <span>Mon espace</span>
-                        <svg class="icon icon-xl" aria-hidden="true">
-                            <use xlink:href="#profil-icon"></use>
-                        </svg>
-                    </div>
-                    <div class="menu-header-account-buttons">
-                        <a href="<?php echo esc_url( site_url('/connexion/') ); ?>?type=particulier"
-                            class="col-md-6 btn btn-blue uppercase bold">Particulier</a>
-                        <a href="<?php echo esc_url( site_url('/connexion/') ); ?>?type=professionnel"
-                            class="col-md-6 btn btn-professionnel uppercase bold">Professionnel</a>
-                    </div>
-                    <?php else : ?>
-                    <div class="bg-white p-1 text-start bradius-1">
-                        <div class="mb-1 text-sm color-<?php echo $user_type ?>">
-                            Bienvenue, <span
-                                class="capitalize bold"><?php echo esc_html( wp_get_current_user()->display_name ); ?></span>
-                        </div>
-                        <a href="<?php echo esc_url( site_url('/tableau-de-bord') ); ?>"
-                            class="justify-center flex gap-1 color-dark myaccount">
-                            <svg class="icon icon-xl" aria-hidden="true">
-                                <use xlink:href="#profil-icon"></use>
-                            </svg>
-                            <span>Mon compte</span>
-                        </a>
-                        <a href="" class="justify-center flex gap-1 italic color-gray">
-                            <?php my_custom_logout_link(); ?>
-                        </a>
-                    </div>
-                    <?php endif; ?>
-                </div>
             </div>
         </header><!-- #masthead -->
+        <div class="container-menu">
+            <?php wp_nav_menu( array( 'theme_location' => 'menu-main', 'menu_id' => 'menu-main' ) ); ?>
+        </div>

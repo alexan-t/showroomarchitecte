@@ -29,7 +29,7 @@ set_query_var('users', $users);
 ?>
 
 <div class="archive-professionnel">
-    <div class="container">
+    <div class="container-xl">
         <div class="row list-filter_container">
             <div class="col-md-4 border-right">
                 <?php get_template_part('templates/parts/filter-pro');?>
