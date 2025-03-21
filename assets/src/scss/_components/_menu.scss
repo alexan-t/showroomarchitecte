@@ -1,8 +1,8 @@
 $btn-height: 50px;
 $btn-width: 50px;
-$bar-width: 40px;
+$bar-width: 30px;
 $bar-height: 3px;
-$bar-distance: -14px;
+$bar-distance: -10px;
 $nav-tog-dur: 0.5s;
 
 .nav-btn {
@@ -15,7 +15,11 @@ $nav-tog-dur: 0.5s;
   top: 15px;
   left: 15px;
   z-index: 999999;
-
+  transition: 0.5s ease-in-out;
+  padding: 1rem;
+  &.nav-on {
+    left: 315px;
+  }
   span {
     display: block;
 
@@ -61,7 +65,6 @@ $nav-tog-dur: 0.5s;
 
   &.nav-on span {
     background: none;
-
     &::before,
     &::after {
       transition-delay: 0s, $nav-tog-dur, $nav-tog-dur;

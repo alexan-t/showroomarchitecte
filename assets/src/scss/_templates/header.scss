@@ -3,6 +3,7 @@ header {
   height: auto;
   width: 100%;
   z-index: 100;
+  background-color: var(--color-dark);
   .menu-header {
     display: grid;
     grid-template-columns: 30% 40% 30%;
@@ -25,10 +26,33 @@ header {
   }
 }
 
+.menu_toggle {
+  transition: all 0.3s ease-in-out;
+  padding: 1rem;
+  position: relative;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  &.is-fixed {
+    position: fixed;
+
+    .nav-btn {
+      background-color: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+    }
+  }
+}
+
+.account_not_connected {
+  display: flex;
+  flex-direction: column;
+}
+
 .container-menu {
   background-color: var(--color-dark);
   height: 100vh;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: var(--menu-width);
@@ -46,8 +70,19 @@ header {
     flex-direction: column;
     height: 100%;
     padding-left: 5rem;
-    padding-top: 2rem;
+    padding-top: 5rem;
     width: 100%;
+    li {
+      a {
+        transition: 0.3s ease-in-out;
+        color: white;
+        opacity: 0.7;
+        font-size: var(--font-size-md);
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
   }
 }
 :root {
@@ -58,10 +93,10 @@ header {
   transform: translateX(-300px);
 }
 body {
-  transform: translateX(0);
-  transition: transform 0.5s ease-in-out;
+  margin-left: 0;
+  transition: margin-left 0.5s ease-in-out;
 }
 body.menu-open {
-  transform: translateX(var(--menu-width));
-  overflow: hidden; /* Empêche le défilement */
+  margin-left: var(--menu-width);
+  overflow: hidden;
 }

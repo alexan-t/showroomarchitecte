@@ -28,8 +28,28 @@ $user_type = get_user_meta( $user_id, 'user_type', true );
                             alt="Logo de Showroom d'Architecte">
                     </a>
                 </div>
+                <div class="menu_user_account">
+                    <?php if ( ! is_user_logged_in() ) : ?>
+                    <div class="account_not_connected">
+                        <div class="text-end color-white mr-3">
+                            Se connecter en tant que
+                        </div>
+                        <div class="flex justify-end gap-1 mr-1">
+                            <a href="<?php echo site_url('/connexion/'); ?>?type=particulier"
+                                class="btn btn-particulier uppercase">Particulier</a>
+                            <a href="<?php echo site_url('/connexion/'); ?>?type=professionnel"
+                                class="btn btn-professionnel uppercase">Professionnel</a>
+                        </div>
+                    </div>
+                    <?php else : ?>
+                    <?php include_once( get_template_directory() . '/templates/parts/menu_user_account.php' ); ?>
+                    <?php endif; ?>
+                </div>
             </div>
-        </header><!-- #masthead -->
+    </div>
+    <div class="p-fixed">
         <div class="container-menu">
             <?php wp_nav_menu( array( 'theme_location' => 'menu-main', 'menu_id' => 'menu-main' ) ); ?>
         </div>
+    </div>
+    </header><!-- #masthead -->

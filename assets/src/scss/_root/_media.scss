@@ -1,39 +1,39 @@
-
 @each $ratio-name, $ratio-value in $aspect-ratios {
-	.ratio-#{$ratio-name} {
-		aspect-ratio: #{$ratio-value};
-		
-	}
-	@supports not (aspect-ratio:  #{$ratio-value}) {
-		.element::before {
-		  float: left;
-		  padding-top: 100%;
-		  content: "";
-		}
-	  
-		.element::after {
-		  display: block;
-		  content: "";
-		  clear: both;
-		}
-	  }
+  .ratio-#{$ratio-name} {
+    aspect-ratio: #{$ratio-value};
+  }
+  @supports not (aspect-ratio: #{$ratio-value}) {
+    .element::before {
+      float: left;
+      padding-top: 100%;
+      content: "";
+    }
+
+    .element::after {
+      display: block;
+      content: "";
+      clear: both;
+    }
+  }
 }
-.ratio{
-	aspect-ratio:var(--aspect-ratio);
+.ratio {
+  aspect-ratio: var(--aspect-ratio);
 }
 
-img[class*="ratio"], iframe[class*="ratio"], figure[class*="ratio"] img{
-	width: 100%;
-	height: auto;
-	object-fit: cover;
+img[class*="ratio"],
+iframe[class*="ratio"],
+figure[class*="ratio"] img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
-figure[class*="ratio"] img{
-    aspect-ratio: inherit;
+figure[class*="ratio"] img {
+  aspect-ratio: inherit;
 }
 
 .icon {
-	width: 1em;
-	height: 1em;
-	transition: color .3s, transform .3s;
+  width: 1em;
+  height: 1em;
+  transition: color 0.3s, transform 0.3s;
 }

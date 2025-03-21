@@ -1,11 +1,11 @@
 $colors: (
-  primary: #e63a54,
+  primary: #d6c9b8,
   secondary: #0e993c,
   "blue": #3968a8,
   "particulier": #3968a8,
   "blue-light": #01a0be,
   "blue-dark": #383b45,
-  "dark": #000000,
+  "dark": #111111,
   "pro-gold": #e5b704,
   "pro-premium": #b21917,
   "professionnel": #fc8f02,
@@ -13,7 +13,7 @@ $colors: (
   "grey": #f1f1f1f1,
   "gray": #b5b5b5,
   "gren": #a9c80f,
-  "gray-dark": #757575 //grey-100: rgb(216, 216, 216),,,,,,
+  "gray-dark": #757575 //grey-100: rgb(216, 216, 216),,,,,,,,,,,,,
 );
 
 $sizes: (
@@ -111,9 +111,11 @@ $radius: 20px;
 $font: "Roboto", serif;
 $fontheading: "Montserrat", serif;
 $fontLato: "Lato", serif;
+$fontGildaDisplay: "Gilda Display", serif;
 
 :root {
   --font: #{$font};
   --fontheading: #{$fontheading};
   --fontLato: #{fontLato};
+  --fontGildaDisplay: #{fontGildaDisplay};
 }
