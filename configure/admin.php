@@ -1,3 +1,1 @@
 <?php
-
-// Admin functions here

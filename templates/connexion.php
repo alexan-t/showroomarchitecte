@@ -31,9 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-$type = isset($_GET['type']) ? sanitize_text_field($_GET['type']) : 'particulier';
-if (!in_array($type, ['professionnel', 'particulier'])) {
-    $type = 'particulier'; 
+$type = isset($_GET['type']) ? sanitize_text_field($_GET['type']) : 'connexion';
+if (!in_array($type, ['inscription', 'connexion','forgot_password'])) {
+    $type = 'connexion'; 
 }
 
 
@@ -43,63 +43,17 @@ get_header(); ?>
 
 
 
-<section class="connexion-page bg-blue-dark mb-1">
+<section class="connexion-page py-5">
     <div class="container">
-        <h1 class="sr-only">Connexion Showroom d'arcitecte - architectes vérifiés dans votre ville pour donner vie à vos
-            projets - France</h1>
-        <h2>Espace <?php echo $type === 'professionnel' ? 'Professionnel' : 'Particulier'; ?></h2>
-        <div class="flex gap-2">
-            <div class=" col-md-6 card card-connexion
-            <?php echo $type === 'professionnel' ? 'pro-connexion' : 'particulier-connexion'; ?>">
-                <div
-                    class="text-2xl uppercase text-center <?php echo $type === 'professionnel' ? 'color-professionnel' : 'color-blue'; ?>">
-                    J’ai déjà un compte</div>
-                <form method="post" action="" class="connexion-form">
-                    <input type="text" id="inputUsername" name="username" class="custom-input" placeholder="E-mail"
-                        required>
-                    <br />
-                    <input type="password" name="password" class="custom-input" placeholder="Mot de passe" required>
-                    <div class="mt-1 text-end">
-                        <a href="#" id="forgotPasswordLink" class="fontroboto color-gray underline italic">
-                            Mot de passe oublié
-                        </a>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" name="login_user"
-                            class="btn btn-blue mt-3 uppercase signin">Connexion</button>
-                    </div>
-                    <!-- Sécurité WordPress -->
-                    <?php wp_nonce_field('user_login_nonce', 'login_nonce'); ?>
-                </form>
-                <h3 class="login_msg color-white text-center"></h3>
-                <div class="log"
-                    style="background-color: <?php echo $type === 'professionnel' ? '#fc8f02' : '#3968a8'; ?>;">
-                </div>
-            </div>
-            <div
-                class="col-md-6 card card-inscription <?php echo $type === 'professionnel' ? 'pro-inscription' : 'particulier-inscription'; ?>">
-                <div class="text-2xl uppercase text-center color-white">
-                    Je n’ai pas de compte</div>
-                <p class="text-center color-white bold fontlato py-3">Créez gratuitement et en un clic votre compte pour
-                    contacter
-                    l’architecte de
-                    votre projet.</p>
-                <form method="post" class="inscription-form">
-                    <input type="email" name="email" class="custom-input" placeholder="addresse e-mail" required>
-                    <input type="hidden" name="type" value="<?php echo $type; ?>">
-                    <?php wp_nonce_field('user_register_nonce', 'register_nonce'); ?>
-                    <div class="text-center">
-                        <button type="submit"
-                            class="register btn mt-3 uppercase <?php echo $type === 'professionnel' ? 'btn-outline-professionnel' : 'btn-outline-blue'; ?>">C’est
-                            parti !</button>
-                    </div>
-                </form>
-                <h3 class="register_msg color-white text-center"></h3>
-                <div class="reg"
-                    style="background-color: <?php echo $type === 'professionnel' ? '#fc8f02' : '#3968a8'; ?>;">
-                </div>
-            </div>
-        </div>
+        <?php 
+        if($type === "connexion") {
+            include_once( get_template_directory() . '/templates/parts/card-connexion.php' ); 
+        } else if ($type === "inscription") {
+            include_once( get_template_directory() . '/templates/parts/card-inscription.php' ); 
+        } else if ($type === "forgot_password"){
+            include_once( get_template_directory() . '/templates/parts/card-forgot_password.php' ); 
+        }
+        ?>
     </div>
 </section>
 

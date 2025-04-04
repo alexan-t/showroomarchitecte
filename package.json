@@ -12,7 +12,7 @@
 		"@biomejs/biome": "1.9.3",
 		"rimraf": "6.0.1",
 		"sass": "1.79.4",
-		"vite": "5.4.8"
+		"vite": "^6.2.5"
 	},
 	"dependencies": {
 		"@splidejs/splide": "^4.1.4",
@@ -24,6 +24,7 @@
 		"animejs": "^3.2.2",
 		"bootstrap": "5.3.3",
 		"glightbox": "^3.3.1",
+		"gsap": "^3.12.7",
 		"lenis": "^1.1.18",
 		"modujs": "^1.4.2",
 		"sweetalert2": "^11.6.13"

@@ -51,3 +51,89 @@
     background-color: var(--color-pro-gold);
   }
 }
+
+.pro-card {
+  border: 1px solid #eee;
+  box-shadow: 0 0 0px rgba(33, 33, 33, 0.2);
+  padding: 1rem;
+  border-radius: 10px;
+  transition: 0.3s ease-in-out;
+  img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+
+.card-realisation {
+  p {
+    margin-block-end: 0;
+  }
+  border-radius: 10px;
+  background-color: var(--color-white);
+  overflow: hidden;
+  height: 580px;
+  &-img {
+    position: relative;
+    img {
+      object-fit: cover;
+      height: 320px;
+    }
+    .count-img {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      padding: 0.2rem 0.5rem;
+      background-color: var(--color-white);
+      border-radius: 5px;
+      font-weight: 500;
+    }
+  }
+  &-infos {
+    padding: 1rem;
+    .end {
+      display: flex;
+      justify-content: end;
+      @include media-breakpoint-down(md) {
+        justify-content: start;
+      }
+    }
+    &-description {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.card-princing {
+  border-radius: 2px;
+  margin: 1rem;
+  position: relative;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  padding: 2rem;
+  border-radius: 10px;
+  height: 520px;
+  .best-offer {
+    position: absolute;
+    right: 0;
+    top: -20px;
+    background-color: var(--color-dark);
+    color: var(--color-white);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: var(--font-size-1xl);
+  }
+  p {
+    margin-block-end: 0;
+  }
+  &.premium {
+    transform: scale(1.1);
+    @include media-breakpoint-down(md) {
+      transform: scale(1);
+    }
+  }
+}

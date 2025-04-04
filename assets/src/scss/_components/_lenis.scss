@@ -1,0 +1,11 @@
+.lenis {
+  overflow-y: auto;
+  height: 100vh;
+  overflow-x: hidden;
+}
+html {
+  overflow: hidden;
+}
+body.menu-open {
+  overflow: hidden;
+}

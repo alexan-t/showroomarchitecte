@@ -129,7 +129,8 @@ if ($current_user_id !== $user_id) {
                 <div class="col-md-6 text-center">
                     <div class="image_effect">
                         <figure>
-                            <img id="profile-image" class="edit-profil-image" src="<?php echo esc_url($user_img)  ?>"
+                            <img style="max-width : 300px; height: 300px; object-fit: cover; border-radius: 50%"
+                                id="profile-image" class="edit-profil-image" src="<?php echo esc_url($user_img)  ?>"
                                 alt="Editer Photo de profil" data-profile="<?php echo esc_url($user_img); ?>">
                         </figure>
                         <span>Modifier l'Image de Profil</span>
@@ -252,7 +253,7 @@ if ($current_user_id !== $user_id) {
                                     data-project-surface="<?php echo esc_attr($project['surface']); ?>"
                                     data-project-duration="<?php echo esc_attr($project['duration']); ?>"
                                     data-project-additional-images='<?php echo json_encode($project['additional_images']); ?>'
-                                    style="max-width: 100%; height: auto;">
+                                    style="max-width: 100%; max-height: 400px;">
                             </figure>
                             <button class="delete-project" data-project-id="<?php echo $index; ?>">
                                 ❌ Supprimer

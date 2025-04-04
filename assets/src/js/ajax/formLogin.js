@@ -1,137 +1,238 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.querySelector(".connexion-form");
-  const loginMessage = document.querySelector(".login_msg");
-  const logAnim = document.querySelector(".log");
+  const form = document.querySelector("#connexionForm");
+  if (!form) return; // Si le formulaire n'est pas présent, on ne fait rien
+  // =======================
+  // 🔔 1. Vérifie si l'URL contient un paramètre "activation"
+  //    Exemple : /connexion/?activation=success
+  // =======================
+  handleActivationAlert();
 
-  if (loginForm) {
-    loginForm.addEventListener("submit", function (e) {
-      e.preventDefault();
+  // =======================
+  // 💾 2. Pré-remplit le champ email si "se souvenir de moi" avait été coché
+  // =======================
+  restoreRememberedEmail();
 
-      // Animation de l'élément log
-      logAnim.style.transform = "translate(-45%, -45%) scale(2)";
-      logAnim.style.width = "100%";
-      logAnim.style.height = "100%";
+  let loginAttempts = 0; // Compte les tentatives échouées
 
-      // Attendez la fin de l'animation avant de continuer
-      logAnim.addEventListener(
-        "transitionend",
-        () => {
-          // Récupérer les données du formulaire
-          const formData = new FormData(this);
-          formData.append(
-            "security",
-            document.querySelector("#login_nonce").value
-          );
-          formData.append("action", "login_user");
-          if (!formData.get("username") || !formData.get("password")) {
-            loginMessage.innerHTML = `<p class="error-message">Veuillez remplir tous les champs.</p>`;
-            loginMessage.style.opacity = "1";
-            return;
-          }
+  // =======================
+  // 📤 3. Gestion de la soumission du formulaire de connexion
+  // =======================
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault(); // Empêche l'envoi classique du formulaire
+    await handleLogin(form);
+  });
 
-          // console.log([...formData.entries()]);
-
-          // Appel AJAX
-          fetch(formLogin.ajaxurl, {
-            method: "POST",
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              // console.log("Réponse :", data);
-              if (data.success) {
-                loginMessage.innerHTML = `<p class="success-message">${data.data.message}</p>`;
-                loginMessage.style.opacity = "1";
-
-                // Redirection après succès
-                setTimeout(() => {
-                  window.location.href = data.data.redirect_url;
-                }, 1500);
-              } else {
-                loginMessage.innerHTML = `<p class="error-message">${data.data.message}</p>`;
-                loginMessage.style.opacity = "1";
-                setTimeout(() => {
-                  loginMessage.style.opacity = "0";
-                  logAnim.style.transform = "translate(0, 0) scale(0)";
-                  logAnim.style.width = "0";
-                  logAnim.style.height = "0";
-                }, 1000);
-              }
-            })
-            .catch((error) => {
-              // console.error("Erreur AJAX :", error);
-              loginMessage.innerHTML = `<p class="error-message">Une erreur est survenue.</p>`;
-              loginMessage.style.opacity = "1";
-            });
-        },
-        { once: true }
-      );
-    });
+  // =======================
+  // 🔑 4. Gestion du lien "mot de passe oublié"
+  // =======================
+  const forgotLink = document.querySelector("#forgot-password-link");
+  if (forgotLink) {
+    forgotLink.addEventListener("click", handleForgotPassword);
   }
 
-  const forgotPasswordLink = document.querySelector("#forgotPasswordLink");
-  const usernameField = document.querySelector("#inputUsername");
+  // =======================
+  // 📌 5. FONCTIONS UTILITAIRES
+  // =======================
 
-  if (forgotPasswordLink) {
-    forgotPasswordLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      console.log("+1");
-      // Animation de l'élément log
-      logAnim.style.transform = "translate(-45%, -45%) scale(2)";
-      logAnim.style.width = "100%";
-      logAnim.style.height = "100%";
+  // 💬 Affiche une alerte si le compte vient d’être activé ou si le lien est invalide
+  function handleActivationAlert() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get("activation");
 
-      const email = usernameField.value.trim();
+    if (status === "success") {
+      Swal.fire({
+        icon: "success",
+        title: "Compte activé",
+        text: "Votre compte est maintenant activé. Vous pouvez vous connecter.",
+        confirmButtonText: "OK",
+      });
+    } else if (status === "failed") {
+      Swal.fire({
+        icon: "error",
+        title: "Erreur d’activation",
+        text: "Le lien d’activation est invalide ou a expiré.",
+        confirmButtonText: "Fermer",
+      });
+    }
+  }
 
-      if (!email) {
-        loginMessage.innerHTML = `<p class="error-message">Veuillez entrer votre e-mail avant de cliquer sur "Mot de passe oublié".</p>`;
-        loginMessage.style.opacity = "1";
-        setTimeout(() => {
-          loginMessage.style.opacity = "0";
-          logAnim.style.transform = "translate(0, 0) scale(0)";
-          logAnim.style.width = "0";
-          logAnim.style.height = "0";
-          loginMessage.innerHTML = ``;
-        }, 3000);
-        return;
-      }
+  // 🔁 Restaure l'email sauvegardé si "Se souvenir" est activé
+  function restoreRememberedEmail() {
+    const emailField = document.querySelector('input[name="username"]');
+    const rememberCheckbox = document.querySelector("#remember-me");
 
-      const formData = new FormData();
-      formData.append("action", "forgot_password");
-      formData.append("email", email);
-      const nonce = document.querySelector("#login_nonce").value;
-      formData.append("security", nonce);
+    if (localStorage.getItem("savedEmail")) {
+      emailField.value = localStorage.getItem("savedEmail");
+      rememberCheckbox.checked = true;
+    }
+  }
 
-      fetch(formLogin.ajaxurl, {
+  // 🔐 Gère la connexion à l'envoi du formulaire
+  async function handleLogin(form) {
+    const formData = new FormData(form);
+    formData.append("action", "login_user");
+    formData.append("security", formLogin.nonce); // Token de sécurité WordPress
+    formData.append(
+      "remember",
+      document.querySelector("#remember-me").checked ? "1" : "0"
+    );
+
+    const email = form.querySelector('input[name="username"]').value;
+    const remember = document.querySelector("#remember-me").checked;
+
+    // Sauvegarde l’email dans le navigateur si "se souvenir" est coché
+    if (remember) {
+      localStorage.setItem("savedEmail", email);
+    } else {
+      localStorage.removeItem("savedEmail");
+    }
+
+    try {
+      const response = await fetch(formLogin.ajaxurl, {
         method: "POST",
         body: formData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            loginMessage.innerHTML = `<p class="success-message">${data.data.message}</p>`;
-            loginMessage.style.opacity = "1";
-            setTimeout(() => {
-              loginMessage.innerHTML = ``;
-              loginMessage.style.opacity = "0";
-              logAnim.style.transform = "translate(0, 0) scale(0)";
-              logAnim.style.width = "0";
-              logAnim.style.height = "0";
-            }, 1000);
-          } else {
-            loginMessage.innerHTML = `<p class="error-message">${data.data.message}</p>`;
-            loginMessage.style.opacity = "1";
-            setTimeout(() => {
-              loginMessage.style.opacity = "0";
-              logAnim.style.transform = "translate(0, 0) scale(0)";
-              logAnim.style.width = "0";
-              logAnim.style.height = "0";
-            }, 1000);
-          }
-        })
-        .catch((error) => {
-          loginMessage.innerHTML = `<p class="error-message">Une erreur est survenue. Veuillez réessayer.</p>`;
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // ✅ Connexion réussie
+        Swal.fire({
+          icon: "success",
+          title: data.data.message,
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 2000,
         });
+
+        setTimeout(() => {
+          window.location.href = data.data.redirect_url; // Redirection
+        }, 2000);
+      } else {
+        // ❌ Compte non activé
+        if (data.data.need_activation) {
+          Swal.fire({
+            title: "Compte inactif",
+            text: data.data.message,
+            icon: "warning",
+            confirmButtonText: "OK",
+          }).then(() => {
+            window.location.reload(); // Recharge la page pour régénérer le nonce
+          });
+          return;
+        }
+
+        // ❌ Erreur de connexion (mauvais identifiants par exemple)
+        Swal.fire({
+          icon: "error",
+          title: "Erreur",
+          text: data.data.message,
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+
+        // 🔁 Après 3 échecs, propose de réinitialiser le mot de passe
+        if (data.data.message.includes("Mot de passe incorrect")) {
+          loginAttempts++;
+          if (loginAttempts >= 3) {
+            await suggestPasswordReset(email);
+            loginAttempts = 0;
+          }
+        }
+      }
+    } catch (error) {
+      showServerError();
+    }
+  }
+
+  // 💡 Propose à l'utilisateur de réinitialiser son mot de passe
+  async function suggestPasswordReset(email) {
+    const result = await Swal.fire({
+      title: "Trop de tentatives",
+      text: "Souhaitez-vous réinitialiser votre mot de passe ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Oui, réinitialiser",
+      cancelButtonText: "Annuler",
+    });
+
+    if (result.isConfirmed) {
+      await sendPasswordReset(email);
+    }
+  }
+
+  // 📧 Envoie l'email de réinitialisation de mot de passe
+  async function sendPasswordReset(email) {
+    const formData = new FormData();
+    formData.append("action", "forgot_password");
+    formData.append("security", formLogin.nonce);
+    formData.append("email", email);
+
+    try {
+      const response = await fetch(formLogin.ajaxurl, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Email envoyé",
+          text: data.data.message,
+          confirmButtonText: "OK",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Erreur",
+          text: data.data.message,
+          confirmButtonText: "Fermer",
+        });
+      }
+    } catch (error) {
+      showServerError();
+    }
+  }
+
+  // 🔐 Lien "Mot de passe oublié" (demande manuelle)
+  async function handleForgotPassword(e) {
+    e.preventDefault();
+
+    const { value: email } = await Swal.fire({
+      title: "Réinitialisation du mot de passe",
+      input: "email",
+      inputLabel: "Entrez votre adresse e-mail",
+      inputPlaceholder: "exemple@email.com",
+      confirmButtonText: "Envoyer",
+      cancelButtonText: "Annuler",
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) return "Veuillez entrer un e-mail.";
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!pattern.test(value)) return "Adresse e-mail invalide.";
+      },
+    });
+
+    if (email) {
+      await sendPasswordReset(email);
+    }
+  }
+
+  // ❌ Alerte en cas d’erreur serveur inattendue
+  function showServerError() {
+    Swal.fire({
+      icon: "error",
+      title: "Erreur serveur",
+      text: "Une erreur est survenue, veuillez réessayer.",
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
     });
   }
 });

@@ -7,6 +7,13 @@ header {
     background-color: transparent;
 }
 
+.logo-img,
+.navigation,
+.nav-btn,
+.account_not_connected {
+    opacity: 0;
+}
+
 .menu-header-links a {
     color: #fff !important;
 }
@@ -19,14 +26,14 @@ header {
             Votre navigateur ne supporte pas les vidéos HTML5.
         </video>
         <div class="container flex flex-col justify-center items-center pt-3 h-100">
-            <div class="landing-title">
+            <div class="landing-title is-anim">
                 <h1 class="sr-only">Showroom d'arcitecte - architectes vérifiés dans votre ville pour donner vie à vos
                     projets - France </h1>
                 <h2 class="uppercase color-white xlbold text-center">
                     nos <span class="bg-white color-professionnel">architectes vérifiés</span>
                     dans votre ville pour donner vie à vos projets.</h2>
             </div>
-            <div class="landing-slogan">
+            <div class="landing-slogan is-anim">
                 <p class="color-white text-xl">Architecte DPLG, architecte, ouvrier de France, architecte d’intérieur
                     et
                     paysagiste.</p>
@@ -100,7 +107,7 @@ header {
                 </div>
                 <div class="service-item">
                     <div class="py-2">
-                        <h4>Vitrine du projet </h4>
+                        <h4>Vitrine de réalisations </h4>
                         <p>Affichez vos plus beaux designs architecturaux. Attirez des clients potentiels et obtenez la
                             reconnaissance de votre travail innovant, améliorant ainsi votre réputation professionnelle.
                         </p>
@@ -126,65 +133,7 @@ header {
             </div>
         </div>
     </section>
-    <section class="py-5">
-        <div class="container">
-            <h2 class="font-GildaDisplay bold-100 text-5xl">Présentation de nos projets </h2>
-            <div class="row mt-5">
-                <div class="col-md-6">
-                    <div class="projet projet-item">
-                        <figure class="ratio ratio-4x3">
-                            <img class="projet-item-image ratio-item"
-                                src="<?php echo get_template_directory_uri(); ?>/assets/img/imgtest3.jpg" alt="">
-                        </figure>
-                        <div class="projet-item-infos pt-2">
-                            <h5>Oasis urbaine </h5>
-                            <p>Un projet résidentiel moderne. Mettre en valeur le design innovant et l’habitat durable
-                                en milieu urbain. </p>
-                            <a href="">Voir le projet</a>
-                        </div>
-                    </div>
-                    <div class="projet projet-item mt-5">
-                        <figure class="ratio ratio-1x1">
-                            <img class="projet-item-image ratio-item"
-                                src="<?php echo get_template_directory_uri(); ?>/assets/img/imgtest3.jpg" alt="">
-                        </figure>
-                        <div class="projet-item-infos pt-2">
-                            <h5>Oasis urbaine </h5>
-                            <p>Un projet résidentiel moderne. Mettre en valeur le design innovant et l’habitat durable
-                                en milieu urbain. </p>
-                            <a href="">Voir le projet</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 pt-5">
-                    <div class="projet projet-item">
-                        <figure class="ratio ratio-1x1">
-                            <img class="projet-item-image ratio-item"
-                                src="<?php echo get_template_directory_uri(); ?>/assets/img/imgtest3.jpg" alt="">
-                        </figure>
-                        <div class="projet-item-infos pt-2">
-                            <h5>Oasis urbaine </h5>
-                            <p>Un projet résidentiel moderne. Mettre en valeur le design innovant et l’habitat durable
-                                en milieu urbain. </p>
-                            <a href="">Voir le projet</a>
-                        </div>
-                    </div>
-                    <div class="projet projet-item mt-5">
-                        <figure class=" ratio ratio-4x3">
-                            <img class="projet-item-image ratio-item"
-                                src="<?php echo get_template_directory_uri(); ?>/assets/img/imgtest3.jpg" alt="">
-                        </figure>
-                        <div class="projet-item-infos pt-2">
-                            <h5>Oasis urbaine </h5>
-                            <p>Un projet résidentiel moderne. Mettre en valeur le design innovant et l’habitat durable
-                                en milieu urbain. </p>
-                            <a href="">Voir le projet</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php get_template_part('templates/parts/home_realisation-card'); ?>
     <section class="contact bg-dark color-white py-5">
         <div class="container">
             <div class="row">

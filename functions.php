@@ -55,8 +55,7 @@ include_functions(get_template_directory() . '/functions');
 
 
 
-// Désactiver la barre d'administration sur le front-end pour tous les utilisateurs
-add_filter('show_admin_bar', '__return_false');
+
 
 
 // CPT TAXONOMY
@@ -88,5 +87,3 @@ include( 'configure/acf.php' );
 if(is_admin()) {
 	include( 'configure/admin.php' );
 }
-
-

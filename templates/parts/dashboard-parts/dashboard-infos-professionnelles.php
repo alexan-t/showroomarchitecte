@@ -9,8 +9,6 @@ $motivation = get_user_meta($user_id, 'motivation_metier', true);
 
 // Récupérer les types d'architectes déjà sélectionnés (stockés sous forme de tableau)
 $architect_types = get_user_meta($user_id, 'architecte_type', true);
-$architect_types = is_array($architect_types) ? $architect_types : [];
-
 // Génération d'un nonce pour sécuriser la requête AJAX
 $nonce = wp_create_nonce('update_pro_infos_nonce');
 ?>
@@ -55,11 +53,29 @@ $nonce = wp_create_nonce('update_pro_infos_nonce');
                 <div class="flex gap-2">
                     <?php
                     $types = ['Architecte', 'Architecte intérieur', "Architecte diplômé d'État", 'Architecte paysagiste'];
-                    foreach ($types as $type) :
-                    ?>
+
+                    // Si la valeur enregistrée est dans un tableau, on récupère la première (juste au cas où)
+                    $normalize = function($str) {
+                        $str = trim($str);
+                        $str = stripslashes($str);
+                        $str = html_entity_decode($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $str = str_replace(['’', '´'], "'", $str);
+                        return $str;
+                    };
+                    
+                    $selected_type = '';
+                    if (is_array($architect_types)) {
+                        $selected_type = isset($architect_types[0]) ? $architect_types[0] : '';
+                    } elseif (is_string($architect_types)) {
+                        $selected_type = $architect_types;
+                    }
+                    
+
+
+                    foreach ($types as $type) : ?>
                     <label>
-                        <input type="checkbox" name="architecte_type[]" value="<?php echo esc_attr($type); ?>"
-                            <?php echo in_array($type, $architect_types) ? 'checked' : ''; ?>>
+                        <input type="radio" name="architecte_type" value="<?php echo esc_attr($type); ?>"
+                            <?php checked($normalize($type), $selected_type); ?>>
                         <?php echo esc_html($type); ?>
                     </label>
                     <?php endforeach; ?>

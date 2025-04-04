@@ -1,4 +1,6 @@
-export function Menu() {
+import gsap from "gsap";
+
+export function Menu(lenis) {
   const menuToggle = document.querySelector(".nav-btn");
   const menuContainer = document.querySelector(".container-menu");
   const body = document.body;
@@ -6,10 +8,17 @@ export function Menu() {
   const menuLogo = document.querySelector(".menu-header-logo");
 
   menuToggle.addEventListener("click", function (event) {
-    event.stopPropagation(); // Empêche le clic sur le bouton de déclencher la fermeture immédiate
-    menuContainer.classList.toggle("active");
+    event.stopPropagation();
+    const isMenuOpen = menuContainer.classList.toggle("active");
     body.classList.toggle("menu-open");
     menuToggle.classList.toggle("nav-on");
+
+    // 👇 Désactive ou réactive le scroll Lenis
+    if (isMenuOpen) {
+      lenis.stop(); // stoppe le scroll smooth
+    } else {
+      lenis.start(); // redémarre le scroll smooth
+    }
   });
 
   // Ferme le menu si clic en dehors
@@ -21,26 +30,52 @@ export function Menu() {
       menuContainer.classList.remove("active");
       body.classList.remove("menu-open");
       menuToggle.classList.remove("nav-on");
+
+      // 👇 Réactive le scroll si fermé via clic extérieur
+      lenis.start();
     }
   });
 
-  // Gestion du scroll pour ajouter/enlever .is-fixed
-  const initialOffsetTop = menuToggleWrapper.offsetTop;
+  // ✅ Animation au scroll avec GSAP
+  let isHidden = false;
 
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > initialOffsetTop) {
-      menuToggleWrapper.classList.add("is-fixed");
-      menuLogo.classList.add("hidden");
-    } else {
-      menuToggleWrapper.classList.remove("is-fixed");
-      menuLogo.classList.remove("hidden");
-    }
-  });
+  if (lenis && menuToggleWrapper && menuLogo) {
+    lenis.on("scroll", ({ scroll }) => {
+      const threshold = menuToggleWrapper.offsetTop;
 
-  let menuToggleUser = document.querySelector(".menu-toggle_user");
-  let navigation = document.querySelector(".navigation");
+      if (scroll > threshold && !isHidden) {
+        gsap.to(menuLogo, {
+          y: -100,
+          opacity: 0,
+          duration: 0.4,
+          ease: "power2.out",
+        });
+        isHidden = true;
+      } else if (scroll <= threshold && isHidden) {
+        gsap.to(menuLogo, {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out",
+        });
+        isHidden = false;
+      }
+      // Ajout / suppression de la classe is-fixed
+      if (scroll > 0) {
+        menuToggleWrapper.classList.add("is-fixed");
+      } else {
+        menuToggleWrapper.classList.remove("is-fixed");
+      }
+    });
+  }
 
-  menuToggleUser.onclick = function () {
-    navigation.classList.toggle("active");
-  };
+  // Toggle menu utilisateur
+  const menuToggleUser = document.querySelector(".menu-toggle_user");
+  const navigation = document.querySelector(".navigation");
+
+  if (menuToggleUser) {
+    menuToggleUser.addEventListener("click", function () {
+      navigation.classList.toggle("active");
+    });
+  }
 }

@@ -18,7 +18,7 @@ function enqueue_profil_page_scripts() {
         // Charger le fichier JS personnalisé principal
         wp_enqueue_script(
             'carousel-profil-page-js',
-            get_template_directory_uri() . '/assets/src/js/ajax/carouselProfilPage.js',
+            get_template_directory_uri() . '/assets/src/js/ajax/modalRealisation.js',
             ['jquery', 'sweetalert2','splide-js'],
             null,
             true
@@ -187,10 +187,10 @@ function get_user_review_function() {
 
 /// Voir information du projet quand on clique sur l'image de celui-ci sur la single_professionnel.php
 function get_project_details() {
-    if (!is_user_logged_in()) {
-        wp_send_json_error(['message' => 'Vous devez être connecté.']);
-        return;
-    }
+    // if (!is_user_logged_in()) {
+    //     wp_send_json_error(['message' => 'Vous devez être connecté.']);
+    //     return;
+    // }
 
     $user_id = intval($_POST['user_id']);
     $project_id = intval($_POST['project_id']);
@@ -203,3 +203,4 @@ function get_project_details() {
     }
 }
 add_action('wp_ajax_get_project_details', 'get_project_details');
+add_action('wp_ajax_nopriv_get_project_details', 'get_project_details');

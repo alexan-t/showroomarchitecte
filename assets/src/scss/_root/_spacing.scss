@@ -1,4 +1,7 @@
 @for $i from 1 through 5 {
+  .rounded-#{$i} {
+    border-radius: $i + px;
+  }
   .gap-#{$i} {
     gap: $i + rem;
   }

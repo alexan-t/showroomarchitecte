@@ -47,6 +47,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reactivate_project'])
     }
 }
 
+$existing_files = $_POST['existing_files'] ?? [];
+$uploaded_files_result = [];
+
+if (!empty($_FILES['project_files'])) {
+    require_once(ABSPATH . 'wp-admin/includes/file.php');
+    $uploaded_files_result = handle_project_file_uploads($_FILES['project_files']);
+}
+
+// Fusionner anciens et nouveaux fichiers
+$all_files = array_merge(
+    is_array($existing_files) ? $existing_files : [],
+    $uploaded_files_result['success'] ?? []
+);
+
+
 // Si le formulaire est soumis (Mise à jour des informations du projet)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reactivate_project'])) {
     // Sanitiser les données envoyées
@@ -62,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reactivate_project']
         'project_name' => sanitize_text_field($_POST['project_name']),
         'project_description' => sanitize_textarea_field($_POST['project_description']),
         'needs' => maybe_serialize($_POST['needs'] ?? []),
+        'attachments' => maybe_serialize($all_files),
     ];
 
     // Mettre à jour dans la base de données
@@ -70,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reactivate_project']
         $updated_data,
         ['id' => $project_id, 'user_id' => $user_id],
         [
-            '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'
+            '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s'
         ],
         ['%d', '%d']
     );
@@ -92,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reactivate_project']
 
 <div class="edit-project">
     <div class="h3">Éditer le projet : <?= esc_html($project->project_name); ?></div>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <input type="hidden" id="project_id" value="<?php echo esc_attr($project->id); ?>">
         <!-- Je recherche -->
         <div class="step">
@@ -208,8 +224,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reactivate_project']
         <!-- Ville -->
         <div class="my-3">
             <label class="color-blue text-md bold underline" for="city">Ville*</label>
-            <input type="text" name="city" id="city" class="custom-input" value="<?= esc_attr($project->city); ?>"
-                required>
+            <input type="text" disabled name="city" id="city" class="custom-input"
+                value="<?= esc_attr($project->city); ?>" required>
         </div>
         <div class="row my-3">
             <!-- Surfaces -->
@@ -229,6 +245,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reactivate_project']
             <div class="col-md-4">
                 <label class="color-blue text-md bold underline" for="budget">Budget prévisionnel*</label>
                 <input type="number" name="budget" id="budget" value="<?= esc_attr($project->budget); ?>" required>
+            </div>
+
+            <div class="col-md-4">
+                <label class="color-blue text-md bold underline" for="project_start_date">Date de commencement du
+                    projet*</label>
+                <input type="date" name="project_start_date" id="project_start_date"
+                    value="<?= esc_attr($project->project_start_date); ?>" required>
             </div>
         </div>
 
@@ -264,8 +287,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['reactivate_project']
             <textarea name="project_description" id="project_description"
                 required><?= esc_textarea($project->project_description); ?></textarea>
         </div>
+        <?php
+        $existing_files = maybe_unserialize($project->attachments);
+        ?>
 
-        <button type="submit" class="btn btn-blue">Mettre à jour</button>
+        <div class="mt-3">
+            <label class="form-label">Ajoutez des fichiers (plans, photos en .jpg ou documents .pdf)*</label>
+
+            <!-- Bouton personnalisé -->
+            <button type="button" id="addFileBtn" class="btn btn-dark my-1">
+                Choisir un fichier
+            </button>
+
+            <!-- Input file masqué -->
+            <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.pdf" style="display: none;">
+
+            <!-- Fichiers existants -->
+            <?php if (!empty($existing_files) && is_array($existing_files)): ?>
+            <ul id="existing-files-list" class="mt-2">
+                <?php foreach ($existing_files as $file_url): ?>
+                <li data-url="<?= esc_attr($file_url); ?>">
+                    <a href="<?= esc_url($file_url); ?>" target="_blank"><?= basename($file_url); ?></a>
+                    <button type="button" class="btn btn-sm btn-danger remove-existing-file"
+                        data-url="<?= esc_attr($file_url); ?>">Supprimer</button>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+
+            <!-- Fichiers nouvellement sélectionnés -->
+            <ul id="new-files-list" class="mt-2"></ul>
+
+            <small class="form-text text-muted">Formats autorisés : .jpg, .jpeg, .pdf</small>
+        </div>
+
+        <button type="submit" class="mt-3 btn btn-blue">Mettre à jour</button>
     </form>
 
 </div>
@@ -306,6 +362,58 @@ document.addEventListener("DOMContentLoaded", () => {
     const redirectUrl =
         "<?php echo esc_url( add_query_arg( 'section', 'mes-projets', site_url('/tableau-de-bord/') ) ); ?>";
 
+    let selectedFiles = [];
+    let existingFiles = [];
+
+    // Récupère les fichiers existants (déjà attachés au projet)
+    document.querySelectorAll('#existing-files-list li').forEach((li) => {
+        existingFiles.push(li.dataset.url);
+    });
+
+    // Supprime visuellement un fichier existant
+    document.querySelectorAll('.remove-existing-file').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const url = btn.dataset.url;
+            existingFiles = existingFiles.filter((f) => f !== url);
+            btn.closest('li').remove();
+        });
+    });
+
+    const fileInput = document.getElementById('fileInput');
+    const filePreviewList = document.getElementById('new-files-list');
+
+    // Bouton personnalisé pour ouvrir le file input
+    const addFileBtn = document.getElementById('addFileBtn');
+    if (addFileBtn && fileInput) {
+        addFileBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Ajout de nouveaux fichiers
+        fileInput.addEventListener('change', () => {
+            const files = Array.from(fileInput.files);
+
+            files.forEach((file) => {
+                selectedFiles.push(file);
+
+                const li = document.createElement('li');
+                li.innerHTML = `
+          ${file.name} 
+          <button type="button" class="my-1 btn btn-sm btn-danger remove-new-file">Supprimer</button>
+        `;
+                filePreviewList.appendChild(li);
+
+                li.querySelector('.remove-new-file').addEventListener('click', () => {
+                    selectedFiles = selectedFiles.filter((f) => f !== file);
+                    li.remove();
+                });
+            });
+
+            // Réinitialise le champ pour pouvoir sélectionner à nouveau les mêmes fichiers
+            fileInput.value = '';
+        });
+    }
+
     const form = document.querySelector(".edit-project form");
 
     if (form) {
@@ -317,7 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const property = document.querySelector('input[name="property"]:checked').value;
             const proprietaire = document.querySelector('input[name="proprietaire"]:checked').value;
             const projet = document.querySelector('input[name="projet"]:checked').value;
-
+            const projectStartDate = document.getElementById("project_start_date").value;
             const projectName = document.getElementById("project_name").value;
             const city = document.getElementById("city").value;
             const budget = document.getElementById("budget").value;
@@ -328,7 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const needsElements = document.querySelectorAll('input[name="needs[]"]:checked');
             const needs = Array.from(needsElements).map(el => el.value);
 
-            const formData = new URLSearchParams();
+            const formData = new FormData();
             formData.append('action', 'update_project');
             formData.append('project_id', projectId);
             formData.append('search', search);
@@ -341,32 +449,44 @@ document.addEventListener("DOMContentLoaded", () => {
             formData.append('city', city);
             formData.append('budget', budget);
             formData.append('project_description', projectDescription);
+            formData.append('project_start_date', projectStartDate);
             needs.forEach(need => formData.append('needs[]', need));
+            // Ajouter les fichiers existants conservés
+            existingFiles.forEach(url => {
+                formData.append('existing_files[]', url);
+            });
+
+            // Ajouter les nouveaux fichiers sélectionnés
+            selectedFiles.forEach(file => {
+                formData.append('project_files[]', file);
+            });
+            for (const pair of formData.entries()) {
+                console.log(pair[0] + ':', pair[1]);
+            }
+
 
             try {
                 const response = await fetch(ajaxObject.ajaxUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: formData.toString()
+                    body: formData
                 });
 
                 const result = await response.json();
+                console.log(result);
 
                 if (result.success) {
                     Swal.fire({
                         title: 'Projet mis à jour avec succès !',
                         text: 'Vous allez être redirigé.',
                         icon: 'success',
-                        timer: 3000,
+                        timer: 2000,
                         timerProgressBar: true,
                         showConfirmButton: false
                     });
 
                     setTimeout(() => {
                         window.location.href = redirectUrl;
-                    }, 3000);
+                    }, 2000);
                 } else {
                     Swal.fire({
                         title: 'Erreur !',

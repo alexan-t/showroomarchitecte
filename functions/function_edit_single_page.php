@@ -70,7 +70,7 @@ function enqueue_form_manage_pro_page_scripts() {
         //Charger le fichier de gestion des projets
         wp_enqueue_script(
             'manage-projects-profil-pages-js',
-            get_template_directory_uri() . '/assets/src/js/ajax/manageProjectsProfilPages.js',
+            get_template_directory_uri() . '/assets/src/js/ajax/manageRealisationProfilPage.js',
             ['jquery', 'sweetalert2'], // Dépendances nécessaires
             null,
             true
@@ -234,16 +234,41 @@ function update_user_pro_page_profile_info() {
         update_user_meta($user_id, 'budget_moyen_chantiers', intval($_POST['budget']));
     }
 
-    if (isset($_POST['architect_types'])) {
-        $valid_types = ["Architecte", "Architecte intérieur", "Architecte diplômé d'État", "Architecte paysagiste"];
+    if (isset($_POST['architect_types']) && !empty($_POST['architect_types'])) {
+        $valid_types = [
+            "Architecte",
+            "Architecte intérieur",
+            "Architecte diplômé d'État",
+            "Architecte paysagiste"
+        ];
+    
+        // Fonction de nettoyage
+        $normalize = function($str) {
+            $str = trim($str);
+            $str = stripslashes($str); // 🔥 Corrige le \ devant '
+            $str = html_entity_decode($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $str = str_replace(['’', '´'], "'", $str); // remplace les apostrophes typographiques
+            $str = preg_replace('/\s+/', ' ', $str);
+            $str = mb_strtolower($str, 'UTF-8'); // minuscule
+            return $str;
+        };
+    
         $selected_type = sanitize_text_field($_POST['architect_types']);
-
-        if (in_array($selected_type, $valid_types)) {
-            update_user_meta($user_id, 'architecte_type', $selected_type);
+        $selected_type_normalized = $normalize($selected_type);
+        $valid_types_normalized = array_map($normalize, $valid_types);
+    
+        error_log("Normalisé reçu : " . $selected_type_normalized);
+        error_log("Liste : " . implode(' | ', $valid_types_normalized));
+    
+        if (in_array($selected_type_normalized, $valid_types_normalized)) {
+            update_user_meta($user_id, 'architecte_type', $selected_type); // on enregistre la version d'origine
         } else {
-            wp_send_json_error(['message' => 'Type d’architecte invalide.']);
+            wp_send_json_error(['message' => "Type d’architecte invalide : " . $selected_type]);
         }
     }
+    
+    
+    
 
     if (isset($_POST['motivation'])) {
         update_user_meta($user_id, 'motivation_metier', sanitize_textarea_field($_POST['motivation']));
@@ -262,13 +287,11 @@ function add_project_on_profil_page() {
     }
 
     $user_id = intval($_POST['user_id']);
-
     if ($user_id !== get_current_user_id()) {
         wp_send_json_error(['message' => 'Accès refusé.']);
         return;
     }
 
-    // Vérification et enregistrement des données
     $project_data = [
         'title' => sanitize_text_field($_POST['title']),
         'budget' => sanitize_text_field($_POST['budget']),
@@ -277,7 +300,7 @@ function add_project_on_profil_page() {
         'description' => sanitize_textarea_field($_POST['description']),
     ];
 
-    // Gestion de l'image principale
+    // Image principale
     if (!empty($_FILES['image']['name'])) {
         require_once(ABSPATH . 'wp-admin/includes/file.php');
         $uploaded = wp_handle_upload($_FILES['image'], ['test_form' => false]);
@@ -286,7 +309,18 @@ function add_project_on_profil_page() {
         }
     }
 
-    // Gestion des images additionnelles
+    if (empty($project_data['image']) && !empty($_POST['image_url'])) {
+        $image_url = esc_url_raw($_POST['image_url']);
+        if (filter_var($image_url, FILTER_VALIDATE_URL)) {
+            $project_data['image'] = $image_url;
+        }
+    }
+
+    if (empty($project_data['image'])) {
+        $project_data['image'] = 'https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg';
+    }
+
+    // Images additionnelles
     $additional_images = [];
     if (!empty($_FILES['additional_images']['name'][0])) {
         foreach ($_FILES['additional_images']['name'] as $key => $name) {
@@ -298,7 +332,6 @@ function add_project_on_profil_page() {
                     'error'    => $_FILES['additional_images']['error'][$key],
                     'size'     => $_FILES['additional_images']['size'][$key],
                 ];
-
                 $uploaded = wp_handle_upload($file, ['test_form' => false]);
                 if ($uploaded && !isset($uploaded['error'])) {
                     $additional_images[] = esc_url($uploaded['url']);
@@ -308,7 +341,23 @@ function add_project_on_profil_page() {
     }
     $project_data['additional_images'] = $additional_images;
 
-    // Sauvegarde dans la base de données
+    // Insertion dans la table SQL
+    global $wpdb;
+    $table = $wpdb->prefix . 'realisation';
+    $wpdb->insert($table, [
+        'user_id'           => $user_id,
+        'title'             => $project_data['title'],
+        'budget'            => $project_data['budget'],
+        'surface'           => $project_data['surface'],
+        'duration'          => $project_data['duration'],
+        'description'       => $project_data['description'],
+        'image'             => $project_data['image'],
+        'additional_images' => maybe_serialize($project_data['additional_images']),
+    ]);
+
+    $project_data['realisation_id'] = $wpdb->insert_id;
+
+    // Mise à jour du user_meta
     $projects = get_user_meta($user_id, 'recent_projects', true);
     if (!is_array($projects)) {
         $projects = [];
@@ -321,6 +370,8 @@ function add_project_on_profil_page() {
 add_action('wp_ajax_add_project_on_profil_page', 'add_project_on_profil_page');
 
 
+
+
 //Supprimer un projet sur la page edit_single_professionnel.php
 function delete_project_on_profil_page() {
     if (!is_user_logged_in()) {
@@ -329,36 +380,37 @@ function delete_project_on_profil_page() {
     }
 
     $user_id = intval($_POST['user_id']);
-    $project_id = intval($_POST['project_id']); // L'index du projet dans la liste
-
+    $project_index = intval($_POST['project_id']); // index du tableau
     if ($user_id !== get_current_user_id()) {
         wp_send_json_error(['message' => 'Accès refusé.']);
         return;
     }
 
-    // Récupérer les projets de l'utilisateur
     $projects = get_user_meta($user_id, 'recent_projects', true);
-    
-    if (!is_array($projects) || !isset($projects[$project_id])) {
+    if (!is_array($projects) || !isset($projects[$project_index])) {
         wp_send_json_error(['message' => 'Projet introuvable.']);
         return;
     }
 
-    // Supprimer le projet de la liste
-    unset($projects[$project_id]);
+    $realisation_id = isset($projects[$project_index]['realisation_id']) ? intval($projects[$project_index]['realisation_id']) : 0;
 
-    // Réindexer le tableau pour éviter les trous
+    // Suppression dans la table
+    if ($realisation_id > 0) {
+        global $wpdb;
+        $wpdb->delete($wpdb->prefix . 'realisation', ['id' => $realisation_id, 'user_id' => $user_id]);
+    }
+
+    // Suppression dans les meta
+    unset($projects[$project_index]);
     $projects = array_values($projects);
-
-    // Mettre à jour la base de données
     update_user_meta($user_id, 'recent_projects', $projects);
 
     wp_send_json_success(['message' => 'Projet supprimé avec succès.']);
 }
+
 add_action('wp_ajax_delete_project_on_profil_page', 'delete_project_on_profil_page');
 
 
-//Mettre à jour un projet sur la page edit_single_professionnel.php
 function edit_project_on_profil_page() {
     error_log("Données reçues par WordPress: " . print_r($_POST, true));
 
@@ -374,7 +426,7 @@ function edit_project_on_profil_page() {
         wp_send_json_error(['message' => 'Projet introuvable']);
     }
 
-    // Mise à jour des informations du projet
+    // Mise à jour des champs texte
     $projects[$project_id]['title'] = sanitize_text_field($_POST['title']);
     $projects[$project_id]['budget'] = sanitize_text_field($_POST['budget']);
     $projects[$project_id]['surface'] = sanitize_text_field($_POST['surface']);
@@ -391,8 +443,61 @@ function edit_project_on_profil_page() {
         }
     }
 
+    // 🔄 Images additionnelles
+    $existing_additional_images = isset($projects[$project_id]['additional_images']) ? $projects[$project_id]['additional_images'] : [];
+
+    // 🗑 Suppression d’anciennes images
+    if (!empty($_POST['removed_old_images'])) {
+        $remaining_images = json_decode(stripslashes($_POST['removed_old_images']), true);
+        if (is_array($remaining_images)) {
+            $existing_additional_images = $remaining_images;
+        }
+    }
+
+    // 📥 Ajout de nouvelles images additionnelles
+    if (!empty($_FILES['additional_images']['name'][0])) {
+        foreach ($_FILES['additional_images']['name'] as $key => $name) {
+            if ($_FILES['additional_images']['error'][$key] === UPLOAD_ERR_OK) {
+                $file = [
+                    'name'     => $_FILES['additional_images']['name'][$key],
+                    'type'     => $_FILES['additional_images']['type'][$key],
+                    'tmp_name' => $_FILES['additional_images']['tmp_name'][$key],
+                    'error'    => $_FILES['additional_images']['error'][$key],
+                    'size'     => $_FILES['additional_images']['size'][$key],
+                ];
+
+                require_once ABSPATH . 'wp-admin/includes/file.php';
+                $uploaded = wp_handle_upload($file, ['test_form' => false]);
+
+                if (isset($uploaded['url'])) {
+                    $existing_additional_images[] = esc_url($uploaded['url']);
+                }
+            }
+        }
+    }
+
+    $projects[$project_id]['additional_images'] = $existing_additional_images;
+
+    // 💾 Sauvegarde dans user_meta
     update_user_meta($user_id, 'recent_projects', $projects);
 
+    // 🔁 Mise à jour dans la table SQL si realisation_id est présent
+    $realisation_id = isset($projects[$project_id]['realisation_id']) ? intval($projects[$project_id]['realisation_id']) : 0;
+
+    if ($realisation_id > 0) {
+        global $wpdb;
+        $wpdb->update($wpdb->prefix . 'realisation', [
+            'title'             => $projects[$project_id]['title'],
+            'budget'            => $projects[$project_id]['budget'],
+            'surface'           => $projects[$project_id]['surface'],
+            'duration'          => $projects[$project_id]['duration'],
+            'description'       => $projects[$project_id]['description'],
+            'image'             => $projects[$project_id]['image'],
+            'additional_images' => maybe_serialize($projects[$project_id]['additional_images']),
+        ], ['id' => $realisation_id, 'user_id' => $user_id]);
+    }
+
+    // ✅ Retour JSON après mise à jour SQL
     wp_send_json_success([
         'project_id' => $project_id,
         'title' => $projects[$project_id]['title'],
@@ -400,7 +505,8 @@ function edit_project_on_profil_page() {
         'surface' => $projects[$project_id]['surface'],
         'duration' => $projects[$project_id]['duration'],
         'description' => $projects[$project_id]['description'],
-        'image_url' => $projects[$project_id]['image']
+        'image_url' => $projects[$project_id]['image'],
+        'additional_images' => $projects[$project_id]['additional_images']
     ]);
 }
 add_action('wp_ajax_edit_project_on_profil_page', 'edit_project_on_profil_page');

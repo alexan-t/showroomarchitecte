@@ -90,12 +90,12 @@ $userType = $user_type === 'professionnel' ? 'professionnel' : 'particulier';
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
+            <!-- <div class="col-md-12">
                 <label for="description">Description</label>
                 <textarea id="description" name="description" class="custom-input custom-textarea"
                     placeholder="Décrivez vos envies générales, vos contraintes…."
                     required><?php echo esc_textarea( get_user_meta( get_current_user_id(), 'description', true ) ); ?></textarea>
-            </div>
+            </div> -->
             <!-- Bouton de soumission -->
             <div class="col-md-12 mt-3 text-center">
                 <button type="submit" class="btn btn-<?php echo $user_type?> uppercase bold">Mettre

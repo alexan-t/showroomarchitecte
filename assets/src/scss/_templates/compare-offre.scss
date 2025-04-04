@@ -1,0 +1,49 @@
+$color_1: #198754;
+$color_2: #dc3545;
+$background-color_1: #f8f9fa;
+
+/* Mobile styling */
+.pricing-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+.pricing-table {
+  min-width: 600px;
+  border-collapse: collapse;
+  th {
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+  }
+  td {
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+  }
+  thead {
+    th {
+      background-color: $background-color_1;
+      font-weight: 600;
+    }
+  }
+}
+.text-success {
+  color: $color_1;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.text-danger {
+  color: $color_2;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+@media screen and (max-width: 600px) {
+  .pricing-table {
+    font-size: 0.9rem;
+    min-width: 100%;
+    th {
+      padding: 0.75rem;
+    }
+    td {
+      padding: 0.75rem;
+    }
+  }
+}

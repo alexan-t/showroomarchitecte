@@ -149,7 +149,7 @@ jQuery(document).ready(function ($) {
     }
   });
 
-  //FORMULAIRE PRO
+  //FORMULAIRE PRO Dashboard Profesionnel
   const form = document.getElementById("pro-info-form");
 
   if (form) {
@@ -198,9 +198,10 @@ jQuery(document).ready(function ($) {
           );
 
           //Ajouter les types d'architectes cochés
-          architectTypes.forEach((type) => {
-            dataToSend.append("architecte_type[]", type);
-          });
+          const selectedArchitectType =
+            form.querySelector('input[name="architecte_type"]:checked')
+              ?.value || "";
+          dataToSend.append("architecte_type", selectedArchitectType);
 
           // Envoi de la requête AJAX
           fetch(ajax_object.ajaxurl, {

@@ -51,32 +51,21 @@ $manage_project_nonce = wp_create_nonce('manage_project_nonce');
                 </span>
             </div>
             <div class="flex items-center gap-1 flex-wrap">
-                <a
+                <a class="color-dark"
                     href="<?= esc_url(add_query_arg(['section' => 'edit-projet', 'project_id' => $project->id], site_url('/tableau-de-bord/'))); ?>">
-                    <svg class="icon icon-xl" aria-hidden="true">
-                        <use xlink:href="#edit"></use>
-                    </svg>
-                    <p class="sr-only">Modifier</p>
+                    <ion-icon class="text-md" name="create-outline" title="Modifier le projet"></ion-icon>
                 </a>
                 <?php if ($project->status === 'active'): ?>
-                <a href="#" class="archive-button" data-id="<?= esc_attr($project->id); ?>">
-                    <svg class="icon icon-xl" aria-hidden="true">
-                        <use xlink:href="#archive"></use>
-                    </svg>
-                    <p class="sr-only">Archiver</p>
+                <a href="#" class="archive-button color-dark" data-id="<?= esc_attr($project->id); ?>">
+                    <ion-icon class="text-md" name="archive-outline" title="Archiver"></ion-icon>
                 </a>
-                <a href="#" class="search-user" data-id="<?= esc_attr($project->id); ?>">
-                    <svg class="icon icon-xl" aria-hidden="true">
-                        <use xlink:href="#search-user"></use>
-                    </svg>
-                    <p class="sr-only">Rechercher un architecte</p>
+                <a href="#" class="search-user color-dark" data-id="<?= esc_attr($project->id); ?>">
+                    <ion-icon class="text-md" name="search-circle-outline"
+                        title="Rechercher un architecte pour le projet"></ion-icon>
                 </a>
                 <?php endif; ?>
-                <a href="#" class="trash-button" data-id="<?= esc_attr($project->id); ?>">
-                    <svg class="icon icon-xl" aria-hidden="true">
-                        <use xlink:href="#trash"></use>
-                    </svg>
-                    <p class="sr-only">Supprimer</p>
+                <a href="#" class="trash-button color-dark" data-id="<?= esc_attr($project->id); ?>">
+                    <ion-icon class="text-md" name="trash-outline" title="Supprimer"></ion-icon>
                 </a>
             </div>
         </div>
@@ -164,13 +153,13 @@ function showProfessionalsModal(data) {
 
     let htmlContent = `
         <div class="container">
-            <h3 class="modal-section-title">🔝 Meilleures correspondances</h3>
+            <h3 class="modal-section-title"><ion-icon name="search-outline"></ion-icon> Meilleures correspondances</h3>
             ${generateProfessionalsHTML(top_professionals)}
 
-            <h3 class="modal-section-title">✨ Professionnels qui pourraient vous intéresser</h3>
+            <h3 class="modal-section-title"><ion-icon name="bulb-outline"></ion-icon> Professionnels qui pourraient vous intéresser</h3>
             ${generateProfessionalsHTML(potential_interests)}
 
-            <h3 class="modal-section-title">🏅 Professionnels Premium</h3>
+            <h3 class="modal-section-title"><ion-icon name="diamond-outline"></ion-icon> Professionnels Privilège</h3>
             ${generateProfessionalsHTML(random_premium)}
         </div>
     `;

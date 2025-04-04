@@ -4,14 +4,78 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  ///Gestion de fichiers pour le projet
+  let selectedFiles = [];
+
+  function renderFileList() {
+    const preview = document.getElementById("filePreviewList");
+    preview.innerHTML = "";
+
+    selectedFiles.forEach((file, index) => {
+      const item = document.createElement("div");
+      item.innerHTML = `
+      <span>${file.name}</span>
+      <button type="button" class="mx-1 btn btn-sm btn-dark" data-index="${index}">Supprimer</button>
+    `;
+      preview.appendChild(item);
+    });
+
+    document.querySelectorAll("#filePreviewList button").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const index = parseInt(e.target.dataset.index);
+        selectedFiles.splice(index, 1);
+        renderFileList();
+      });
+    });
+  }
+
+  //// API Autocomplétion ville
+  function enableCityAutocomplete() {
+    const input = document.getElementById("inputSearchCity");
+    const suggestBox = document.querySelector(".suggest");
+
+    if (!input || !suggestBox) return;
+
+    input.addEventListener("input", async () => {
+      const query = input.value.trim();
+      suggestBox.innerHTML = "";
+
+      if (query.length < 2) return;
+
+      try {
+        const res = await fetch(
+          `https://geo.api.gouv.fr/communes?nom=${query}&limit=5`
+        );
+        const data = await res.json();
+        console.log(data);
+        data.forEach((ville) => {
+          const option = document.createElement("div");
+          option.textContent = `${ville.nom} (${ville.code})`;
+          option.classList.add("suggestion-item");
+          option.style.cursor = "pointer";
+          option.addEventListener("click", () => {
+            input.value = ville.nom;
+            suggestBox.innerHTML = "";
+          });
+          suggestBox.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Erreur avec l’autocomplétion :", error);
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!suggestBox.contains(e.target) && e.target !== input) {
+        suggestBox.innerHTML = "";
+      }
+    });
+  }
+
   // Définir le mixin pour les notifications d'erreur
   const toastMixinError = Swal.mixin({
-    toast: true,
     icon: "error",
-    position: "bottom-right",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
+    position: "center",
+    showConfirmButton: true,
     didOpen: (toast) => {
       toast.addEventListener("mouseenter", Swal.stopTimer);
       toast.addEventListener("mouseleave", Swal.resumeTimer);
@@ -144,6 +208,9 @@ document.addEventListener("DOMContentLoaded", () => {
           selectedData[input.name] = input.value;
         });
 
+        // Log des radios cochés
+        console.log("Radios sélectionnés :", selectedData);
+
         $.ajax({
           url: ajaxObject.ajaxUrl,
           type: "POST",
@@ -155,6 +222,34 @@ document.addEventListener("DOMContentLoaded", () => {
           success: function (response) {
             $("#form-container").html(response);
             updateProgressBar(step);
+            if (step === 3) {
+              enableCityAutocomplete();
+
+              document
+                .getElementById("addFileBtn")
+                .addEventListener("click", () => {
+                  document.getElementById("fileInput").click();
+                });
+
+              document
+                .getElementById("fileInput")
+                .addEventListener("change", (e) => {
+                  const newFiles = Array.from(e.target.files).filter(
+                    (file) =>
+                      file &&
+                      file.name &&
+                      file.size > 0 &&
+                      /\.(jpe?g|pdf)$/i.test(file.name)
+                  );
+
+                  selectedFiles = [...selectedFiles, ...newFiles];
+                  renderFileList();
+
+                  e.target.type = "";
+                  e.target.type = "file";
+                });
+              renderFileList();
+            }
           },
           error: function () {
             Swal.fire({
@@ -167,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
+
   /**
    * Gestion de la soumission du formulaire final.
    */
@@ -175,6 +271,9 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
 
       const formData = new FormData(event.target);
+      selectedFiles.forEach((file) => {
+        formData.append("project_files[]", file);
+      });
 
       $.ajax({
         url: ajaxObject.ajaxUrl,

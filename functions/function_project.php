@@ -49,6 +49,71 @@ add_action('wp_ajax_load_form_step', 'load_form_step_callback');
 add_action('wp_ajax_nopriv_load_form_step', 'load_form_step_callback');
 
 
+//Ajout de fichier au projet client
+/**
+ * Gérer l'upload des fichiers du formulaire projet (jpg, jpeg, pdf uniquement).
+ *
+ * @param array $files Tableau provenant de $_FILES['project_files']
+ * @return array Résultat contenant soit les URLs, soit des erreurs.
+ */
+function handle_project_file_uploads($files) {
+    $results = [
+        'success' => [],
+        'errors' => []
+    ];
+
+    if (empty($files['name'][0])) {
+        $results['errors'][] = 'Aucun fichier envoyé.';
+        return $results;
+    }
+
+    $allowed_mime_types = ['image/jpeg', 'application/pdf'];
+    $allowed_extensions = ['jpg', 'jpeg', 'pdf'];
+
+    $upload_dir = wp_upload_dir();
+
+    foreach ($files['name'] as $index => $name) {
+        $tmp_name = $files['tmp_name'][$index];
+        $type     = $files['type'][$index];
+        $error    = $files['error'][$index];
+        $size     = $files['size'][$index];
+
+        $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        $safe_name = sanitize_file_name($name);
+
+        if ($error !== UPLOAD_ERR_OK) {
+            $results['errors'][] = "Erreur avec le fichier : $name";
+            continue;
+        }
+
+        if (!in_array($type, $allowed_mime_types) || !in_array($extension, $allowed_extensions)) {
+            $results['errors'][] = "Type de fichier non autorisé : $name";
+            continue;
+        }
+
+        $destination = $upload_dir['path'] . '/' . $safe_name;
+
+        // Ajouter suffixe si fichier déjà présent
+        $counter = 1;
+        while (file_exists($destination)) {
+            $safe_name = pathinfo($name, PATHINFO_FILENAME) . "-$counter." . $extension;
+            $destination = $upload_dir['path'] . '/' . $safe_name;
+            $counter++;
+        }
+
+        if (move_uploaded_file($tmp_name, $destination)) {
+            $results['success'][] = $upload_dir['url'] . '/' . $safe_name;
+        } else {
+            $results['errors'][] = "Impossible d'enregistrer le fichier : $name";
+        }
+    }
+
+    return $results;
+}
+
+
+
+
 function create_projects_table() {
     global $wpdb;
 
@@ -66,15 +131,17 @@ function create_projects_table() {
             proprietaire VARCHAR(255) NOT NULL,
             projet VARCHAR(255) NOT NULL,
             city VARCHAR(255) NOT NULL,
-            latitude FLOAT NULL,  -- Nouvelle colonne latitude
-            longitude FLOAT NULL, -- Nouvelle colonne longitude
+            latitude FLOAT NULL,
+            longitude FLOAT NULL,
             budget VARCHAR(255) NOT NULL,
             total_surface VARCHAR(255) NOT NULL,
             work_surface VARCHAR(255) NOT NULL,
             project_name VARCHAR(255) NOT NULL,
             project_description TEXT NOT NULL,
             needs TEXT NULL,
+            attachments TEXT NULL, 
             status ENUM('active', 'archived') NOT NULL DEFAULT 'active',
+            project_start_date DATE NOT NULL,
             closed_at DATETIME NULL,
             created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
@@ -83,29 +150,30 @@ function create_projects_table() {
         
         dbDelta($sql);
 
-        // Loguer la création de la table
         if ($wpdb->get_var("SHOW TABLES LIKE '{$table_name}'") == $table_name) {
             error_log("Table '{$table_name}' créée avec succès.");
         } else {
             error_log("Échec de la création de la table '{$table_name}'.");
         }
     } else {
-        // Vérifier si les colonnes latitude et longitude existent, sinon les ajouter
-        $columns = $wpdb->get_results("SHOW COLUMNS FROM $table_name LIKE 'latitude'");
-        if (empty($columns)) {
-            $wpdb->query("ALTER TABLE $table_name ADD COLUMN latitude FLOAT NULL");
-            error_log("Ajout de la colonne latitude.");
-        }
+        // ✅ Ajouter les colonnes manquantes si la table existe déjà
 
-        $columns = $wpdb->get_results("SHOW COLUMNS FROM $table_name LIKE 'longitude'");
-        if (empty($columns)) {
-            $wpdb->query("ALTER TABLE $table_name ADD COLUMN longitude FLOAT NULL");
-            error_log("Ajout de la colonne longitude.");
+        $columns_to_add = [
+            'latitude' => "FLOAT NULL",
+            'longitude' => "FLOAT NULL",
+            'attachments' => "TEXT NULL",
+            'project_start_date' => isset($_POST['project_start_date']) ? sanitize_text_field($_POST['project_start_date']) : date('Y-m-d'),
+        ];
+
+        foreach ($columns_to_add as $column => $definition) {
+            $exists = $wpdb->get_results("SHOW COLUMNS FROM $table_name LIKE '$column'");
+            if (empty($exists)) {
+                $wpdb->query("ALTER TABLE $table_name ADD COLUMN $column $definition");
+                error_log("Colonne '$column' ajoutée à la table '$table_name'.");
+            }
         }
     }
 }
-
-
 
 // Appeler la fonction lors de l'activation du thème ou d'un plugin
 add_action('after_switch_theme', 'create_projects_table'); // Pour les thèmes
@@ -135,13 +203,14 @@ function submit_project_form_callback() {
         'project_name' => sanitize_text_field($_POST['project_name'] ?? ''),
         'project_description' => sanitize_textarea_field($_POST['project_description'] ?? ''),
         'needs' => maybe_serialize($_POST['needs'] ?? []),
+        'project_start_date' => sanitize_text_field($_POST['project_start_date'] ?? ''),
     ];
 
     // Fusionner les données
     $form_data = array_merge($session_data, $submitted_data);
 
     // Validation des champs obligatoires
-    $required_fields = ['search', 'property', 'proprietaire', 'projet', 'city', 'total_surface', 'work_surface', 'budget', 'project_name', 'project_description'];
+    $required_fields = ['search', 'property', 'proprietaire', 'projet', 'city', 'total_surface', 'work_surface', 'budget', 'project_name', 'project_description', 'project_start_date'];
     foreach ($required_fields as $field) {
         if (empty($form_data[$field])) {
             wp_send_json_error("Le champ $field est requis.");
@@ -154,7 +223,6 @@ function submit_project_form_callback() {
     $api_url = "https://nominatim.openstreetmap.org/search?q={$city}&format=json&limit=1";
 
     $response = wp_remote_get($api_url, ['timeout' => 10]);
-
     $latitude = null;
     $longitude = null;
 
@@ -165,6 +233,17 @@ function submit_project_form_callback() {
         if (!empty($data) && isset($data[0]['lat']) && isset($data[0]['lon'])) {
             $latitude = floatval($data[0]['lat']);
             $longitude = floatval($data[0]['lon']);
+        }
+    }
+
+    // Gérer l'upload de fichiers .jpg / .jpeg / .pdf
+    $uploaded_files_result = [];
+    if (!empty($_FILES['project_files'])) {
+        $uploaded_files_result = handle_project_file_uploads($_FILES['project_files']);
+
+        if (!empty($uploaded_files_result['errors'])) {
+            wp_send_json_error('Erreur lors de l\'upload des fichiers : ' . implode(', ', $uploaded_files_result['errors']));
+            wp_die();
         }
     }
 
@@ -189,9 +268,11 @@ function submit_project_form_callback() {
             'project_name' => $form_data['project_name'],
             'project_description' => $form_data['project_description'],
             'needs' => $form_data['needs'],
+            'attachments' => maybe_serialize($uploaded_files_result['success']),
+            'project_start_date' => $form_data['project_start_date'],
         ],
         [
-            '%d', '%s', '%s', '%s', '%s', '%s', '%f', '%f', '%s', '%s', '%s', '%s', '%s', '%s'
+            '%d', '%s', '%s', '%s', '%s', '%s', '%f', '%f', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s'
         ]
     );
 
@@ -205,6 +286,7 @@ function submit_project_form_callback() {
 
     wp_die();
 }
+
 add_action('wp_ajax_submit_project_form', 'submit_project_form_callback');
 
 add_action('wp_ajax_nopriv_submit_project_form', 'submit_project_form_callback');
@@ -246,6 +328,21 @@ function update_project_callback() {
         wp_die();
     }
 
+    $existing_files = $_POST['existing_files'] ?? [];
+    $uploaded_files_result = [];
+
+    if (!empty($_FILES['project_files'])) {
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        $uploaded_files_result = handle_project_file_uploads($_FILES['project_files']);
+    }
+
+    $all_files = array_merge(
+        is_array($existing_files) ? $existing_files : [],
+        $uploaded_files_result['success'] ?? []
+    );
+
+
+
     // Valider les données
     $updated_data = [
         'search' => sanitize_text_field($_POST['search']),
@@ -257,9 +354,32 @@ function update_project_callback() {
         'work_surface' => sanitize_text_field($_POST['work_surface']),
         'city' => sanitize_text_field($_POST['city']),
         'budget' => sanitize_text_field($_POST['budget']),
+        'project_start_date' => sanitize_text_field($_POST['project_start_date']),
         'project_description' => sanitize_textarea_field($_POST['project_description']),
         'needs' => maybe_serialize($_POST['needs'] ?? []),
+        'attachments' => maybe_serialize($all_files),
+        'latitude' => $latitude ?? null,
+        'longitude' => $longitude ?? null,
     ];
+    $format = [
+        '%s', // search
+        '%s', // property
+        '%s', // proprietaire
+        '%s', // projet
+        '%s', // project_name
+        '%s', // total_surface
+        '%s', // work_surface
+        '%s', // city
+        '%s', // budget
+        '%s', // project_start_date
+        '%s', // project_description
+        '%s', // needs
+        '%s', // attachments
+        '%f', // latitude
+        '%f', // longitude
+    ];
+    
+    
 
     // Vérifier si la ville a changé
     if ($updated_data['city'] !== $project->city) {
@@ -285,9 +405,10 @@ function update_project_callback() {
         $table_name,
         $updated_data,
         ['id' => $project_id],
-        ['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%f', '%f'],
+        $format,
         ['%d']
     );
+    
 
     if ($updated === false) {
         wp_send_json_error("Erreur lors de la mise à jour du projet.");

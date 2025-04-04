@@ -229,6 +229,11 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("save-pro-profile-info")
     .addEventListener("click", function () {
+      console.log(
+        "Architect type envoyé :",
+        document.getElementById("architect_types").value
+      );
+
       let formData = new FormData();
       formData.append("action", "update_user_pro_page_profile_info");
       formData.append("user_id", ajax_object.user_id);

@@ -85,6 +85,8 @@ if ($is_page_public !== '1' && !$is_owner) {
     </div>
     <?php endif; ?>
 
+
+
     <?php 
     if (isset($is_page_public) && $is_page_public === '0' && $is_owner) : ?>
     <div class="mx-4">
@@ -119,8 +121,9 @@ if ($is_page_public !== '1' && !$is_owner) {
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <a href="<?php echo esc_url($user_img); ?>" class="glightbox">
-                        <img src="<?php echo esc_url($user_img); ?>" alt="Photo de profil">
+                    <a href="<?php echo esc_url($user_img); ?>" class="glightbox flex justify-center">
+                        <img src="<?php echo esc_url($user_img); ?>" alt="Photo de profil"
+                            style="max-width : 300px; height: 300px; object-fit: cover; border-radius: 50%; z-index: -1;">
                     </a>
                 </div>
                 <div class="col-md-6 flex items-center">
@@ -208,17 +211,13 @@ if ($is_page_public !== '1' && !$is_owner) {
             <div class="row">
                 <?php foreach ($projects as $index => $project) : ?>
                 <div class="<?php echo $col_class; ?>">
-                    <div class="project image_effect">
-                        <?php if (!empty($project['image'])) : ?>
-                        <!-- Image du projet avec un identifiant unique -->
-                        <figure>
-                            <img class="bg-img-project profil-project-image"
-                                src="<?php echo esc_url($project['image']); ?>" alt="Image du projet"
-                                data-project-id="<?php echo $index; ?>" data-userpage-id="<?php echo $user_id_page ?>"
-                                style="max-width: 100%; height: auto;">
-                        </figure>
-                        <?php endif; ?>
-                    </div>
+                    <?php if (!empty($project['image'])) : ?>
+                    <!-- Image du projet avec un identifiant unique -->
+                    <img class="bg-img-project profil-project-image" src="<?php echo esc_url($project['image']); ?>"
+                        alt="Image du projet" data-project-id="<?php echo $index; ?>"
+                        data-userpage-id="<?php echo $user_id_page ?>"
+                        style="max-width: 100%; height: auto; cursor: pointer">
+                    <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
             </div>
@@ -253,7 +252,7 @@ if ($is_page_public !== '1' && !$is_owner) {
     </div>
 
     <div class="contact">
-        <div class="container">
+        <div class="mt-3 flex justify-center">
             <?php
             // $user_id contient l'ID de l'architecte.
             // On appelle le shortcode pour générer le bouton + JS 

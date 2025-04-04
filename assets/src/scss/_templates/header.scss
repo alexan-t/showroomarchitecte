@@ -9,7 +9,7 @@ header {
     grid-template-columns: 30% 40% 30%;
     align-items: center;
     @include media-breakpoint-down(md) {
-      grid-template-columns: 60% 40%;
+      grid-template-columns: 25% 50% 25%;
     }
     &-links {
       height: 100%;
@@ -23,6 +23,14 @@ header {
         margin-bottom: inherit;
       }
     }
+    &-logo {
+      padding: 2rem 0;
+      @include media-breakpoint-down(md) {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+    }
   }
 }
 
@@ -34,8 +42,6 @@ header {
   left: 20px;
   z-index: 9999;
   &.is-fixed {
-    position: fixed;
-
     .nav-btn {
       background-color: rgba(0, 0, 0, 0.8);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -47,6 +53,18 @@ header {
 .account_not_connected {
   display: flex;
   flex-direction: column;
+  @include media-breakpoint-down(md) {
+    display: none;
+    &.mobile {
+      display: flex !important;
+      opacity: 1;
+      .flex {
+        flex-direction: column;
+        margin: auto;
+        padding-top: 2rem;
+      }
+    }
+  }
 }
 
 .container-menu {
@@ -55,25 +73,29 @@ header {
   position: absolute;
   top: 0;
   left: 0;
-  width: var(--menu-width);
+  width: 300px;
   z-index: 100;
   transform: translateX(-300px);
   transition: transform 0.5s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  &.active {
+    transform: translateX(0);
+  }
   #menu-main {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    background-color: var(--color-dark);
-    display: -webkit-box;
-    display: -ms-flexbox;
+    flex: 1; // Pour occuper tout l’espace vertical restant
+    overflow-y: auto; // Permet de scroller
+    -webkit-overflow-scrolling: touch; // Pour iOS
+    padding-top: 5rem;
     display: flex;
-    -ms-flex-direction: column;
     flex-direction: column;
     height: 100%;
-    padding-left: 5rem;
-    padding-top: 5rem;
-    width: 100%;
+
     li {
       a {
+        display: flex;
+        justify-content: center;
+        width: 100%;
         transition: 0.3s ease-in-out;
         color: white;
         opacity: 0.7;
@@ -83,20 +105,10 @@ header {
         }
       }
     }
-  }
-}
-:root {
-  --menu-width: 300px; /* Ajuste la largeur du menu */
-}
 
-.container-menu.active {
-  transform: translateX(-300px);
-}
-body {
-  margin-left: 0;
-  transition: margin-left 0.5s ease-in-out;
-}
-body.menu-open {
-  margin-left: var(--menu-width);
-  overflow: hidden;
+    @include media-breakpoint-down(md) {
+      padding-top: 3rem;
+      height: 480px;
+    }
+  }
 }

@@ -36,6 +36,24 @@
     background-color: var(--color-blue); /* Couleur de progression */
     transition: width 0.4s ease;
   }
+  .suggest {
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    background: white;
+    z-index: 1000;
+    width: 100%;
+  }
+
+  .suggestion-item {
+    padding: 8px 10px;
+  }
+
+  .suggestion-item:hover {
+    background-color: #f0f0f0;
+  }
 }
 
 .form-group {
@@ -89,6 +107,7 @@
   padding: 1rem;
   overflow: hidden;
   overflow-y: auto;
+  height: 100vh;
   @include media-breakpoint-down(md) {
     overflow: inherit;
     overflow-y: inherit;
